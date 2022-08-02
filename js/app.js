@@ -72,14 +72,24 @@ GameBoard.prototype.renderBoard = function() {
   }
 };
 
-let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple'], 'testy', ['test']);
+let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple'], 'testy', ['wrong']);
 testGame.renderBoard();
 
 // TODO: the int array will hold numbers which correspond to right, wrong, and wrong position
 // compare each box of the user's guess with the answer key
 GameBoard.prototype.checkGuess = function() {
-  
-  return [int];
+  let compareArr = [];
+  let currentGuess = this.previousGuesses[this.previousGuesses.length - 1];
+  for(let i = 0; i < 5; i++) {
+    if (currentGuess[i] === this.correctAnswer[i]) {
+      compareArr.push(1);
+    } else if (this.correctAnswer.includes(currentGuess[i])) {
+      compareArr.push(2);
+    } else {
+      compareArr.push(3);
+    }
+  }
+  return compareArr;
 };
 
 // this function updates the GameBoard object base
@@ -90,7 +100,17 @@ GameBoard.prototype.checkGuess = function() {
 // TODO: Compare attempted guess with the color position and answers.
 // TODO: Display symbol and color the border to display if the attempted guess is right, wrong, or correct, but in the wrong spot
 GameBoard.prototype.updateBoard = function (intArr) {
-
+  let guessCount = this.previousGuesses.length;
+  for(let int of intArr) {
+    let key = document.querySelector(`.wordBox:nth-of-type(${guessCount}) .letterBox:nth-child(${int})`);
+    if(int === 1) {
+      key.style.background = 'green';
+    } else if (int === 2) {
+      key.style.background = 'grey';
+    } else {
+      key.style.background = 'yellow';
+    }
+  }
 };
 
 // this will render the current users stats when the game completes
