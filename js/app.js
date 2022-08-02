@@ -23,12 +23,6 @@ User.prototype.updateStats = function() {
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
-// TODO: make constructor for the area where users actually play the game
-  // properties:
-    // this.colorArray: an array for random colors
-    // a string for the word that is the answer
-    // an array to hold the previous guesses for this play session
-      // each index in the array will be an array 
 function GameBoard(colorArray = generateRandomColors(), correctAnswer = getCorrectWord(), previousGuesses = []) {
   this.colorArray = colorArray;
   this.correctAnswer = correctAnswer;
@@ -37,20 +31,55 @@ function GameBoard(colorArray = generateRandomColors(), correctAnswer = getCorre
 
 // prototype functions for GameBoard
 // push the guess onto the game board object guess array
-// TODO: 
 GameBoard.prototype.addGuess = function(letterColorArray) {
-
+  // letter color array will need to be formatted like this
+  // [['hsl(x, x, x)', 'x'], ['hsl(x, x, x), 'x'], ['hsl(x, x, x), 'x'], ['hsl(x, x, x), 'x'], ['hsl(x, x, x), 'x'];
+  this.previousGuesses.push(letterColorArray);
 };
 
 // window into the dom, create grid for guesses and create another grid for keyboard
 // // TODO: add event listeners to keyboard so the guess is added to the game board guesses array, checked, and board update
 GameBoard.prototype.renderBoard = function() {
+  let guessDiv = document.querySelector('#guessDiv');
 
+  for(let y = 0; y < 6; y++) {
+    let wordDiv = document.createElement('div');
+    wordDiv.setAttribute('class', 'wordBox');
+    guessDiv.appendChild(wordDiv);
+    for(let x = 0; x < 5; x++) {
+      let letterDiv = document.createElement('div');
+      letterDiv.setAttribute('class', 'letterBox');
+      wordDiv.appendChild(letterDiv);
+    }
+  }
+
+  let letterArray = [
+    ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+    ['z', 'x', 'c', 'v', 'b', 'n', 'm']
+  ];
+
+  let keyBoardDiv = document.querySelector('#keyBoardDiv');
+  for(let i = 0; i < letterArray.length; i++) {
+    let keyboardRow = document.createElement('div');
+    keyboardRow.setAttribute('class', 'keyRow');
+    for(let j = 0; j < letterArray[i].length; j++) {
+      let key = document.createElement('div');
+      key.setAttribute('class', 'key');
+      key.innerHTML = letterArray[i][j];
+      keyboardRow.appendChild(key);
+    }
+    keyBoardDiv.appendChild(keyboardRow);
+  }
 };
+
+let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple'], 'testy', ['test']);
+testGame.renderBoard();
 
 // TODO: the int array will hold numbers which correspond to right, wrong, and wrong position
 // compare each box of the user's guess with the answer key
 GameBoard.prototype.checkGuess = function() {
+  guessedColors = []
   return [int];
 };
 
