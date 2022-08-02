@@ -31,10 +31,8 @@ function GameBoard(colorArray = generateRandomColors(), correctAnswer = getCorre
 
 // prototype functions for GameBoard
 // push the guess onto the game board object guess array
-GameBoard.prototype.addGuess = function(letterColorArray) {
-  // letter color array will need to be formatted like this
-  // [['hsl(x, x, x)', 'x'], ['hsl(x, x, x), 'x'], ['hsl(x, x, x), 'x'], ['hsl(x, x, x), 'x'], ['hsl(x, x, x), 'x'];
-  this.previousGuesses.push(letterColorArray);
+GameBoard.prototype.addGuess = function(guessWordArr) {
+  this.previousGuesses.push(guessWordArr);
 };
 
 // window into the dom, create grid for guesses and create another grid for keyboard
@@ -49,6 +47,7 @@ GameBoard.prototype.renderBoard = function() {
     for(let x = 0; x < 5; x++) {
       let letterDiv = document.createElement('div');
       letterDiv.setAttribute('class', 'letterBox');
+      letterDiv.style.border = `solid ${this.colorArray[x]} 1px`;
       wordDiv.appendChild(letterDiv);
     }
   }
@@ -79,7 +78,7 @@ testGame.renderBoard();
 // TODO: the int array will hold numbers which correspond to right, wrong, and wrong position
 // compare each box of the user's guess with the answer key
 GameBoard.prototype.checkGuess = function() {
-  guessedColors = []
+  
   return [int];
 };
 
