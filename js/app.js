@@ -2,10 +2,10 @@
 
 // GLOBAL VARIABLES
 // User Array from local storage, current user
-
+let worldeDictionary = [];
 
 // USER CONSTRUCTOR and PROTOTYPES
-/* TODO: create User constructor with these properties:
+/* DONE: create User constructor with these properties:
     username:
     totalGamesWon:
     winStreak:
@@ -143,13 +143,20 @@ function getLocalStorage() {
 // create an empty array that will store individual words
 // parse text file by using the \n as a deliminator, push the parsed words onto the empty array
 // set item into local storage as the dictionary
-function storeDictionary(wordListFile) {
+function storeDictionary(wordListFile)
+{
+  // make a variable to store the dictionary string
 
+  // make a variable to split the string into indices in an array
+  // push to array
+
+  // return
 }
 
 // in the drive conditional, call this when a new user must be created
 // it will create a new user object with the user's name
 // return the object so that it can be stored as current user and pushed onto the user array
+// credit: https://bobbyhadz.com/blog/javascript-read-file-into-array#:~:text=Use%20the%20fs.,get%20an%20array%20of%20strings.
 function createNewUser(username) {
   
 }
