@@ -1,3 +1,7 @@
 * {
   box-sizing: border-box;
 }
+
+.logo {
+  width: 350px;
+}
