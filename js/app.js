@@ -23,10 +23,13 @@ User.prototype.updateStats = function() {
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
-function GameBoard(colorArray = generateRandomColors(), correctAnswer = getCorrectWord(), previousGuesses = []) {
+function GameBoard(colorArray = generateRandomColors(), correctOrder = getCorrectOrder(), previousGuesses = []) {
+  // color array holds 6 possible random colors, correct answer holds the random word
+  // previous guess holds an array of user guesses
   this.colorArray = colorArray;
-  this.correctAnswer = correctAnswer;
+  this.correctAnswer = correctOrder;
   this.previousGuesses = previousGuesses;
+
 }
 
 // prototype functions for GameBoard
@@ -38,41 +41,34 @@ GameBoard.prototype.addGuess = function(guessWordArr) {
 // window into the dom, create grid for guesses and create another grid for keyboard
 // // TODO: add event listeners to keyboard so the guess is added to the game board guesses array, checked, and board update
 GameBoard.prototype.renderBoard = function() {
+  // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
   for(let y = 0; y < 6; y++) {
+    // word div will create a row that will hold boxes for each letter
     let wordDiv = document.createElement('div');
     wordDiv.setAttribute('class', 'wordBox');
     guessDiv.appendChild(wordDiv);
     for(let x = 0; x < 5; x++) {
+      // letter box will hold the letter that the user chooses
+      // once I make an event handler I will add a event listener
       let letterDiv = document.createElement('div');
       letterDiv.setAttribute('class', 'letterBox');
-      letterDiv.style.border = `solid ${this.colorArray[x]} 1px`;
       wordDiv.appendChild(letterDiv);
     }
   }
 
-  let letterArray = [
-    ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-    ['z', 'x', 'c', 'v', 'b', 'n', 'm']
-  ];
-
-  let keyBoardDiv = document.querySelector('#keyBoardDiv');
-  for(let i = 0; i < letterArray.length; i++) {
-    let keyboardRow = document.createElement('div');
-    keyboardRow.setAttribute('class', 'keyRow');
-    for(let j = 0; j < letterArray[i].length; j++) {
-      let key = document.createElement('div');
-      key.setAttribute('class', 'key');
-      key.innerHTML = letterArray[i][j];
-      keyboardRow.appendChild(key);
-    }
-    keyBoardDiv.appendChild(keyboardRow);
+  let colorBoard = document.querySelector('#colorBoard');
+  for(let i = 0; i < 6; i++) {
+    let colorBox = document.createElement('div');
+    colorBox.setAttribute('class', 'colorBox');
+    colorBox.style.background =`${this.colorArray[i]}`;
+    colorBoard.appendChild(colorBox);
   }
 };
 
-let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple'], 'testy', ['wrong']);
+// i just made a game board to test if it actually rendered, it works so far :)
+let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], 'testy', ['wrong']);
 testGame.renderBoard();
 
 // TODO: the int array will hold numbers which correspond to right, wrong, and wrong position
@@ -132,7 +128,7 @@ GameBoard.prototype.clear = function() {
 // HELPER FUNCTIONS
 
 // call this function in the game board constructor when a new game is started
-function getCorrectWord() {
+function getCorrectOrder() {
   // generate a random number between 0 and dictionary word array length minus one
   // get the word stored in the array at that randomly generated index
   // return this word
