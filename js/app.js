@@ -12,7 +12,12 @@
     highestWinStreak:
     GameBoard: (it's an object)
   */
-function User(username) {
+function User(username, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0)
+{
+  this.username = username;
+  this.totalGamesWon = totalGamesWon;
+  this.winStreak = winStreak;
+  this.highestWinStreak = highestWinStreak;
   this.GameBoard = createGameBoard();
 }
 
