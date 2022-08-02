@@ -28,35 +28,75 @@ User.prototype.updateStats = function() {
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
-// TODO: make constructor for the area where users actually play the game
-  // properties:
-    // this.colorArray: an array for random colors
-    // a string for the word that is the answer
-    // an array to hold the previous guesses for this play session
-      // each index in the array will be an array 
-function GameBoard(colorArray = generateRandomColors(), correctAnswer = getCorrectWord(), previousGuesses = []) {
+function GameBoard(colorArray = generateRandomColors(), correctOrderArr = getCorrectOrder(), previousGuesses = []) {
+  // color array holds 6 possible random colors, correct answer holds the random word
+  // previous guess holds an array of user guesses
   this.colorArray = colorArray;
-  this.correctAnswer = correctAnswer;
+  this.correctOrderArr = correctOrderArr;
   this.previousGuesses = previousGuesses;
+
 }
 
 // prototype functions for GameBoard
 // push the guess onto the game board object guess array
-// TODO: 
-GameBoard.prototype.addGuess = function(letterColorArray) {
-
+GameBoard.prototype.addGuess = function(guessColorArr) {
+  this.previousGuesses.push(guessColorArr);
 };
 
 // window into the dom, create grid for guesses and create another grid for keyboard
 // // TODO: add event listeners to keyboard so the guess is added to the game board guesses array, checked, and board update
 GameBoard.prototype.renderBoard = function() {
+  // guess div is the window into the dom
+  let guessDiv = document.querySelector('#guessDiv');
 
+  for(let y = 0; y < 6; y++) {
+    // word div will create a row that will hold boxes for each letter
+    let guessRow = document.createElement('div');
+    guessRow.setAttribute('class', 'guessRow');
+    guessDiv.appendChild(guessRow);
+    for(let x = 0; x < 5; x++) {
+      // oneColor box will hold the letter that the user chooses
+      // once I make an event handler I will add a event listener
+      let oneColor = document.createElement('div');
+      oneColor.setAttribute('class', 'oneColor');
+      guessRow.appendChild(oneColor);
+    }
+  }
+
+  // this loop will create six boxes that hold the colors that the user can click
+  // this will need an event listener too, but i'm gonna wait til we have an event handler
+  let colorBoard = document.querySelector('#colorBoard');
+  for(let i = 0; i < 6; i++) {
+    let colorBox = document.createElement('div');
+    colorBox.setAttribute('class', 'colorBox');
+    colorBox.style.background =`${this.colorArray[i]}`;
+    colorBoard.appendChild(colorBox);
+  }
 };
+
+// i just made a game board to test if it actually rendered, it works so far :)
+let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], '', ['wrong']);
+testGame.renderBoard();
 
 // TODO: the int array will hold numbers which correspond to right, wrong, and wrong position
 // compare each box of the user's guess with the answer key
 GameBoard.prototype.checkGuess = function() {
-  return [int];
+  // i made array to tell me if this position guess is right, wrong, or somewhere else in the array
+  // key: 1 = correct!, 2 = not in the right spot, 3 = wrong
+  let compareArr = [];
+  // current guess is the last guess added to the previous guess array
+  let currentGuess = this.previousGuesses[this.previousGuesses.length - 1];
+  for(let i = 0; i < 5; i++) {
+    if (currentGuess[i] === this.correctAnswer[i]) {
+      compareArr.push(1);
+    } else if (this.correctAnswer.includes(currentGuess[i])) {
+      compareArr.push(2);
+    } else {
+      compareArr.push(3);
+    }
+  }
+  // i return this array so that it can be used to update the board
+  return compareArr;
 };
 
 // this function updates the GameBoard object base
@@ -67,7 +107,20 @@ GameBoard.prototype.checkGuess = function() {
 // TODO: Compare attempted guess with the color position and answers.
 // TODO: Display symbol and color the border to display if the attempted guess is right, wrong, or correct, but in the wrong spot
 GameBoard.prototype.updateBoard = function (intArr) {
-
+  // i used the guess count to figure out which row i need to update
+  let guessCount = this.previousGuesses.length;
+  // then I'm gonna loop through that int array from the check guess function
+  // based on the key in the check guess function i'll change the border
+  for(let int of intArr) {
+    let key = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${int})`);
+    if(int === 1) {
+      key.style.border = 'solid green 5px';
+    } else if (int === 2) {
+      key.style.border = 'solid grey 5px';
+    } else {
+      key.style.border = 'solid red 5px';
+    }
+  }
 };
 
 // this will render the current users stats when the game completes
@@ -89,7 +142,7 @@ GameBoard.prototype.clear = function() {
 // HELPER FUNCTIONS
 
 // call this function in the game board constructor when a new game is started
-function getCorrectWord() {
+function getCorrectOrder() {
   // generate a random number between 0 and dictionary word array length minus one
   // get the word stored in the array at that randomly generated index
   // return this word
