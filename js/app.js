@@ -13,6 +13,7 @@ let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(generateRandomColors
 renderBoard();
 
 
+
 // USER CONSTRUCTOR and PROTOTYPES
 /* DONE: create User constructor with these properties:
     username:
@@ -359,8 +360,10 @@ function driver() {
 // traverse through userObjects array
 // if user's name exists in any object's name property, return that object
 // if doesn't exist it will return null
-function getUser(username) {
-  
+function getUser() {
+  let name = document.getElementById('name');
+  console.log(name.value);
+  return name.value;
 }
 
 // this function will get variables out of local storage set initialize the user object array global variables
@@ -372,9 +375,26 @@ function getLocalStorage() {
 // it will create a new user object with the user's name
 // return the object so that it can be stored as current user and pushed onto the user array
 // credit: https://bobbyhadz.com/blog/javascript-read-file-into-array#:~:text=Use%20the%20fs.,get%20an%20array%20of%20strings.
-function createNewUser(username) {
-  
+function createNewUser() {
+  let userName = document.getElementById('userName');
+  let player = document.createElement('input');
+  player.type='text'; 
+  player.id='name';
+  player.name = 'name';
+  let playerLabel = document.createElement('label');
+  playerLabel.for='name';
+  playerLabel.innerHTML='Hello there. Please enter your name.'
+  let nameButton = document.createElement('button');
+  nameButton.type='button';
+  nameButton.innerHTML='Submit';
+  nameButton.addEventListener('click', getUser);
+  userName.appendChild(playerLabel);
+  userName.appendChild(player);
+  userName.appendChild(nameButton);
+
 }
+
+createNewUser();
 
 // this function will be called to create a new gameboard object
 // this will be a helper function used inside of the User constructor function to create a game board object and set it equal to the Users game board
@@ -387,6 +407,4 @@ function createGameBoard() {
 function updateLocalStorage() {
 
 }
-
-generateRandomColors();
 
