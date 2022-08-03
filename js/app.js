@@ -2,7 +2,7 @@
 
 // GLOBAL VARIABLES
 // User Array from local storage, current user
-let worldeDictionary = [];
+let currentUser = new User();
 
 // USER CONSTRUCTOR and PROTOTYPES
 /* DONE: create User constructor with these properties:
@@ -18,7 +18,7 @@ function User(username, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0)
   this.totalGamesWon = totalGamesWon;
   this.winStreak = winStreak;
   this.highestWinStreak = highestWinStreak;
-  this.GameBoard = createGameBoard();
+  this.GameBoard = new GameBoard();
 }
 
 // Prototype functions for user
@@ -28,13 +28,14 @@ User.prototype.updateStats = function() {
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
-function GameBoard(colorArray = generateRandomColors(), correctOrderArr = getCorrectOrder(), previousGuesses = []) {
+function GameBoard(colorArray = generateRandomColors(), correctOrderArr = getCorrectOrder(), previousGuesses = [], gameCounter = 0) {
   // color array holds 6 possible random colors, correct answer holds the random word
   // previous guess holds an array of user guesses
+  // ['hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)'];
   this.colorArray = colorArray;
   this.correctOrderArr = correctOrderArr;
   this.previousGuesses = previousGuesses;
-
+  this.gameCounter = gameCounter;
 }
 
 // prototype functions for GameBoard
@@ -71,15 +72,35 @@ GameBoard.prototype.renderBoard = function() {
     colorBox.setAttribute('class', 'colorBox');
     colorBox.style.background =`${this.colorArray[i]}`;
     colorBoard.appendChild(colorBox);
+    colorBoard.addEventListener('click', handleColorPick);
   }
 };
+
+// let enter = document.createElement('div');
+//   enter.setAttribute('id', 'enterButton');
+//   enter.addEventListener('click', handleGuess);
+//   colorBoard.appendChild(enter);
+
 
 // i just made a game board to test if it actually rendered, it works so far :)
 let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], '', ['wrong']);
 testGame.renderBoard();
 
-// TODO: the int array will hold numbers which correspond to right, wrong, and wrong position
-// compare each box of the user's guess with the answer key
+// this function will get the guess from the game board
+GameBoard.prototype.getGuessArray = function() {
+  // guess count will tell me what row I need to grab from the board
+  let guessCount = this.previousGuesses.length + 1;
+  let guessArr = [];
+  for(let i = 0; i < 5; i++) {
+    // current element is the individual box in that row that i need to get the color from
+    let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i})`);
+    // add that color to the array
+    guessArr.push(currentElement.style.background);
+  }
+  return guessArr;
+};
+
+
 GameBoard.prototype.checkGuess = function() {
   // i made array to tell me if this position guess is right, wrong, or somewhere else in the array
   // key: 1 = correct!, 2 = not in the right spot, 3 = wrong
@@ -99,13 +120,7 @@ GameBoard.prototype.checkGuess = function() {
   return compareArr;
 };
 
-// this function updates the GameBoard object base
-//  on the results of the user's last attempt/ the int array passed into this functions is from check  guess
-// update the global variables, both the object and the object in the array
-// update the user array by setting the local variable user as the local storage user array
-// TODO: Submit guess to the array and update the local storage.
-// TODO: Compare attempted guess with the color position and answers.
-// TODO: Display symbol and color the border to display if the attempted guess is right, wrong, or correct, but in the wrong spot
+
 GameBoard.prototype.updateBoard = function (intArr) {
   // i used the guess count to figure out which row i need to update
   let guessCount = this.previousGuesses.length;
@@ -123,11 +138,6 @@ GameBoard.prototype.updateBoard = function (intArr) {
   }
 };
 
-// this will render the current users stats when the game completes
-// this could be in an event handler for the submit button, if game ends invoke this function
-// also call the update stats function for that user, 
-// TODO: Create a local storage to store users history score.
-// 
 GameBoard.prototype.renderStatsDisplay = function() {
 
 };
@@ -140,6 +150,13 @@ GameBoard.prototype.clear = function() {
 
 
 // HELPER FUNCTIONS
+
+function handleColorPick(event) {
+  let boxArray = document.querySelectorAll('.guessRow>*');
+  let color = event.target.style.background;
+  boxArray[currentUser.GameBoard.gameCounter].style.background = color;
+  currentUser.GameBoard.gameCounter++;
+}
 
 // call this function in the game board constructor when a new game is started
 function getCorrectOrder() {
@@ -155,6 +172,13 @@ function generateRandomColors() {
   // put that number into string literal to make hsl string
   // push color string onto array
   // return array
+}
+
+function handleGuess() {
+  let guess = currentUser.GameBoard.getGuessArray();
+  currentUser.GameBoard.addGuess(guess);
+  currentUser.GameBoard.checkGuess();
+  currentUser.GameBoard.updateBoard();
 }
 
 // i was thinking this could be called on page load
@@ -193,19 +217,6 @@ function getLocalStorage() {
 
 }
 
-// create an empty array that will store individual words
-// parse text file by using the \n as a deliminator, push the parsed words onto the empty array
-// set item into local storage as the dictionary
-function storeDictionary(wordListFile)
-{
-  // make a variable to store the dictionary string
-
-  // make a variable to split the string into indices in an array
-  // push to array
-
-  // return
-}
-
 // in the drive conditional, call this when a new user must be created
 // it will create a new user object with the user's name
 // return the object so that it can be stored as current user and pushed onto the user array
@@ -221,14 +232,7 @@ function createGameBoard() {
   
 }
 
-// this function is called when the board is created so that the letters are displayed on the keyboard with the correct color
-function matchColorToLetter(gameBoardObj) {
-
-}
-
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
 function updateLocalStorage() {
 
 }
-
-// EXECUTABLE CODE
