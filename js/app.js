@@ -268,7 +268,7 @@ function getCorrectOrder(colorArray) {
     let randColor = getRandomNumber(0, (colorArray.length-1));
 
     // if the winningCombo array doesn't have randColor in it
-    if (!winningCombo.includes(colorArr[randColor]))
+    if (!winningCombo.includes(colorArray[randColor]))
     {
       // push the unique color into the winningCombo array
       winningCombo.push(colorArray[randColor]);
@@ -400,6 +400,7 @@ driver();
 
 
 function checkIfUserExists() {
+  console.log(allUserArray);
   if(allUserArray) {
     for(let user of allUserArray) {
       if(user.name === globalUserName) {
@@ -407,7 +408,10 @@ function checkIfUserExists() {
       }
     }
   } else {
-    let newGame = new GameBoard(generateRandomColors(), getCorrectOrder());
+    let newColorArray = generateRandomColors();
+    let newCombo = getCorrectOrder(newColorArray);
+    let newGame = new GameBoard(newColorArray, newCombo);
+    console.log(newGame);
     console.log(newGame);
     currentUser = new User(globalUserName, newGame);
     allUserArray = [];
@@ -430,6 +434,7 @@ function getUser() {
 // this function will get variables out of local storage set initialize the user object array global variables
 function getLocalStorage() {
   allUserArray = localStorage.getItem('storedUsers');
+  JSON.parse(allUserArray)
 }
 
 // in the drive conditional, call this when a new user must be created
@@ -463,6 +468,7 @@ function createNewUser() {
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
 function updateLocalStorage() {
   allUserArray[currentUserIndex] = currentUser;
-  localStorage.setItem('storedUsers', allUserArray);
+  let stringArray = JSON.stringify(allUserArray);
+  localStorage.setItem('storedUsers', stringArray);
 }
 
