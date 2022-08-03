@@ -5,6 +5,7 @@
 let allUserArray;
 let globalUserName;
 let currentUser;
+let currentUserIndex;
 
 // i just made a game board to test if it actually rendered, it works so far :)
 
@@ -402,11 +403,11 @@ function driver() {
     }
   } else {
     let newGame = new GameBoard(generateRandomColors(), getCorrectOrder);
-    console.log(newGame);
     currentUser = new User(globalUserName, newGame);
+    allUserArray.push(currentUser);
   }
-
-  renderBoard();
+  console.log(currentUser);
+  console.log(currentUser.gameBoard);
 }
 
 
@@ -421,7 +422,7 @@ function getUser() {
 
 // this function will get variables out of local storage set initialize the user object array global variables
 function getLocalStorage() {
-  allUserArray = localStorage.get('storedUsers');
+  allUserArray = localStorage.getItem('storedUsers');
 }
 
 // in the drive conditional, call this when a new user must be created
@@ -454,6 +455,7 @@ function createNewUser() {
 
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
 function updateLocalStorage() {
+  allUserArray[currentUserIndex] = currentUser;
   localStorage.setItem('storedUsers', allUserArray);
 }
 
