@@ -394,7 +394,12 @@ function driver() {
 
   getLocalStorage();
   createNewUser();
+  checkIfUserExists();
+}
+driver();
 
+
+function checkIfUserExists() {
   if(allUserArray) {
     for(let user of allUserArray) {
       if(user.name === globalUserName) {
@@ -402,14 +407,14 @@ function driver() {
       }
     }
   } else {
-    let newGame = new GameBoard(generateRandomColors(), getCorrectOrder);
+    let newGame = new GameBoard(generateRandomColors(), getCorrectOrder());
+    console.log(newGame);
     currentUser = new User(globalUserName, newGame);
+    allUserArray = [];
     allUserArray.push(currentUser);
+    updateLocalStorage();
   }
-  console.log(currentUser);
-  console.log(currentUser.gameBoard);
 }
-
 
 // traverse through userObjects array
 // if user's name exists in any object's name property, return that object
@@ -418,6 +423,8 @@ function getUser() {
   let name = document.getElementById('name');
   console.log(name.value);
   globalUserName = name.value;
+  let userForm = document.querySelector('#userName');
+  userForm.innerHTML = '';
 }
 
 // this function will get variables out of local storage set initialize the user object array global variables
