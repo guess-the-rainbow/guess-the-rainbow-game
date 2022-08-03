@@ -4,7 +4,10 @@
 // User Array from local storage, current user
 
 // i just made a game board to test if it actually rendered, it works so far :)
-let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
+console.log(generateRandomColors());
+let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(generateRandomColors(), ['orange', 'red', 'blue', 'green', 'purple']));
+
+
 
 // i think this render board method should also happen in the driver code but it's here for now
 renderBoard();
@@ -61,7 +64,7 @@ function renderBoard() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
-  for(let y = 0; y < 6; y++) {
+  for(let y = 0; y < currentUser.gameBoard.colorArray.length; y++) {
     // guess row will hold colors for an entire guess
     let guessRow = document.createElement('div');
     guessRow.setAttribute('class', 'guessRow');
@@ -85,7 +88,7 @@ function renderBoard() {
   // colorBoard is the window into the DOM
   let colorBoard = document.querySelector('#colorBoard');
   // this loop makes the six boxes that will show the possible colors
-  for(let i = 0; i < 6; i++) {
+  for(let i = 0; i < currentUser.gameBoard.colorArray.length; i++) {
     // create the box div
     let colorBox = document.createElement('div');
     colorBox.setAttribute('class', 'colorBox');
@@ -242,61 +245,72 @@ function getCorrectOrder() {
 // call this function in the game board constructor when a new game is started
 // credit for inspiration: https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html#:~:text=that%20is%20run%20like%20this,push(randomRgbaString(1))%3B
 function generateRandomColors() {
-
+  // hue ranges
+  // reds: 0 - 18 && 340 - 360
+  let redHues = {
+    // -20 is the same as 340
+    minRange: -20,
+    maxRange: 18
+  };
+  // oranges: 20 - 48
+  let orangeHues = {
+    minRange: 20,
+    maxRange: 40
+  };
+  // yellows: 52 - 65
+  let yellowsHues = {
+    minRange: 52,
+    maxRange: 65
+  };
+  // greens: 68 - 155
+  let greenHues = {
+    minRange: 68,
+    maxRange: 155
+  };
+  // cyans: 163 - 182
+  let cyanHues = {
+    minRange: 163,
+    maxRange: 182
+  };
+  // blues: 185 - 255
+  let blueHues = {
+    minRange: 185,
+    maxRange: 255
+  };
+  // violets: 259 - 283
+  let violetHues = {
+    minRange: 259,
+    maxRange: 283
+  };
+  // magentas: 286 - 331
+  let magentaHues = {
+    minRange: 286,
+    maxRange: 331
+  };
+  // set hue objects into an array
   let hueObjectsArray = [
-    // hue ranges
-    // reds: 0 - 18 && 340 - 360
-    redHues = {
-      // -20 is the same as 340
-      minRange: -20,
-      maxRange: 18
-    },
-    // oranges: 20 - 48
-    orangeHues = {
-      minRange: 20,
-      maxRange: 40
-    },
-    // yellows: 52 - 65
-    yellowsHues = {
-      minRange: 52,
-      maxRange: 65
-    },
-    // greens: 68 - 155
-    greenHues = {
-      minRange: 68,
-      maxRange: 155
-    },
-    // cyans: 163 - 182
-    cyanHues = {
-      minRange: 163,
-      maxRange: 182
-    },
-    // blues: 185 - 255
-    blueHues = {
-      minRange: 185,
-      maxRange: 255
-    },
-    // violets: 259 - 283
-    violetHues = {
-      minRange: 259,
-      maxRange: 283
-    },
-    // magentas: 286 - 331
-    magentaHues = {
-      minRange: 286,
-      maxRange: 331
-    },
-];
+    redHues,
+    orangeHues,
+    yellowsHues,
+    greenHues,
+    cyanHues,
+    blueHues,
+    violetHues,
+    magentaHues
+  ];
+
 
   // empty array to store hsl strings
   let hslArray = [];
   // use random number generator to set ranges for each hue range
   // get random number for hue
-  for (let i = 0; i < hueObjectsArray; i++)
+  for (let i = 0; i < hueObjectsArray.length; i++)
   {
     let randomHue = getARandomColorInRange(hueObjectsArray[i]);
+    console.log(randomHue);
     // push hsl with random hue, 50% saturation, 50% lightness
-    hslArray.push(`hsl(${randomHue},50%,50%)`);
+    hslArray.push(`hsl(${randomHue}, 50%, 50%)`);
+    console.log(hslArray[i]);
   }
   // return an array of hsl strings
   return hslArray;
@@ -394,4 +408,3 @@ function updateLocalStorage() {
 
 }
 
-// nameButton.onclick = document.getElementById('playerLabel');
