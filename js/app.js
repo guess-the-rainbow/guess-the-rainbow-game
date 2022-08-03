@@ -149,12 +149,51 @@ function getCorrectOrder() {
 }
 
 // call this function in the game board constructor when a new game is started
+// credit for inspiration: https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html#:~:text=that%20is%20run%20like%20this,push(randomRgbaString(1))%3B
 function generateRandomColors() {
+
+  // hue ranges
+  // reds: 0 - 18 && 340 - 360
+  // oranges: 20 - 48
+  // yellows: 52 - 65
+  // greens: 68 - 155
+  // cyans: 163 - 182
+  // blues: 185 - 255
+  // violets: 259 - 283
+  // magentas: 286 - 331
+
+  // saturation range: 50 - 100
+
+  // lightness range: 25 - 67
+
+  // use random number generator to set ranges for each color
+
+
   // make an empty array to store hsl strings
+  let hslArray = [];
+  // hsl string literal template:
+  // `hsla(${hue},${saturation}%,${lightness}%)`
+
   // get random number for hue
+  for (let i = 0; i < 8; i++)
+  {
+    let randomHue = getRandomNumber()
+  }
   // put that number into string literal to make hsl string
   // push color string onto array
   // return array
+}
+
+// this function gets single random hsl value with a specified range
+function getARandomColorInRange()
+{
+  let hueInRange = getRandomNumber(minRange, maxRange);
+}
+
+// generates a random number withing a specified range
+function getRandomNumber(min, max)
+{
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // i was thinking this could be called on page load
