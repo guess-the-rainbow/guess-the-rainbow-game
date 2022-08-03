@@ -246,43 +246,43 @@ function generateRandomColors() {
   // reds: 0 - 18 && 340 - 360
   let redHues = {
     // -20 is the same as 340
-    minRange: -20,
-    maxRange: 18
+    minRange: -10,
+    maxRange: 5
   };
   // oranges: 20 - 48
   let orangeHues = {
     minRange: 20,
-    maxRange: 40
+    maxRange: 44
   };
   // yellows: 52 - 65
   let yellowsHues = {
     minRange: 52,
-    maxRange: 65
+    maxRange: 61
   };
   // greens: 68 - 155
   let greenHues = {
-    minRange: 68,
-    maxRange: 155
+    minRange: 71,
+    maxRange: 143
   };
   // cyans: 163 - 182
   let cyanHues = {
     minRange: 163,
-    maxRange: 182
+    maxRange: 186
   };
   // blues: 185 - 255
   let blueHues = {
     minRange: 185,
-    maxRange: 255
+    maxRange: 237
   };
   // violets: 259 - 283
   let violetHues = {
-    minRange: 259,
-    maxRange: 283
+    minRange: 245,
+    maxRange: 287
   };
   // magentas: 286 - 331
   let magentaHues = {
-    minRange: 286,
-    maxRange: 331
+    minRange: 296,
+    maxRange: 327
   };
   // set hue objects into an array
   let hueObjectsArray = [
@@ -295,7 +295,6 @@ function generateRandomColors() {
     violetHues,
     magentaHues,
   ];
-  console.log(hueObjectsArray[0]);
 
   // empty array to store hsl strings
   let hslArray = [];
@@ -306,7 +305,7 @@ function generateRandomColors() {
     let randomHue = getARandomColorInRange(hueObjectsArray[i]);
     console.log(randomHue);
     // push hsl with random hue, 50% saturation, 50% lightness
-    hslArray.push(`hsl(${randomHue},50%,50%)`);
+    hslArray.push(`hsl(${randomHue},60%,50%)`);
     console.log(hslArray[i]);
   }
   // return an array of hsl strings
@@ -329,6 +328,8 @@ function getRandomNumber(min, max)
 {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+
 
 // i was thinking this could be called on page load
 function driver() {
@@ -387,4 +388,3 @@ function updateLocalStorage() {
 }
 
 generateRandomColors();
-
