@@ -188,6 +188,7 @@ function handleColorPick(event) {
 
   // this stores the string of the color of what was clicked
   let color = event.target.style.background;
+  console.log(color);
 
   // this changes the background color box to the clicked color
   // i selected the box by taking the gamecounter from the gameboard and using it as the index in the box array
