@@ -102,31 +102,44 @@ function renderBoard() {
 GameBoard.prototype.getGuessArray = function() {
   // guess count will tell me what row I need to grab from the board
   let guessCount = this.previousGuesses.length + 1;
-  console.log(guessCount);
+
+  // create an empty array to hold each color guessed
   let guessArr = [];
   for(let i = 0; i < 5; i++) {
-    // current element is the individual box in that row that i need to get the color from
+    // this css selector is grabbing the row with guess count and the individual box using the index
     let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i + 1})`);
+    // add the selected elements background color to the array
     guessArr.push(currentElement.style.background);
   }
+  // return this array so it can be pushed onto the previous guess array
   return guessArr;
 };
 
-
+// takes an array from the previous guess and compares it to the correct color arr
 GameBoard.prototype.checkGuess = function() {
+  // create an empty array to hold the compare values
+  // compare value key: 1 = correct, 2 = incorrect position, 3 = completely wrong
   let compareArr = [];
+  
+  // grab the previous guess from the previous guess array stored in the users gameboard
   let currentGuess = this.previousGuesses[this.previousGuesses.length - 1];
 
+  // loop through the five selected colors and push a key value onto the array
   for(let i = 0; i < 5; i++) {
+    // the guess was correct
     if (currentGuess[i] === this.correctOrderArr[i]) {
       compareArr.push(1);
-    } else if (this.correctOrderArr.includes(currentGuess[i])) {
+    }
+    // the guess was in that correct order, but it's not in the right spot
+    else if (this.correctOrderArr.includes(currentGuess[i])) {
       compareArr.push(2);
-    } else {
+    }
+    // this color is not in the correct color array at all
+    else {
       compareArr.push(3);
     }
   }
-  console.log(compareArr);
+  // return this compare array so that it can be used to update the board
   return compareArr;
 };
 
