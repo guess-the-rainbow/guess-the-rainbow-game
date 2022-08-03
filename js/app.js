@@ -5,8 +5,11 @@
 let allUserArray;
 
 // i just made a game board to test if it actually rendered, it works so far :)
-console.log(generateRandomColors());
-let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(generateRandomColors(), ['orange', 'red', 'blue', 'green', 'purple']));
+
+let colorArr = generateRandomColors();
+let combo = getCorrectOrder(colorArr);
+console.log(combo);
+let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(colorArr, combo));
 
 
 
@@ -66,7 +69,7 @@ function renderBoard() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
-  for(let y = 0; y < currentUser.gameBoard.colorArray.length; y++) {
+  for(let y = 0; y < 6; y++) {
     // guess row will hold colors for an entire guess
     let guessRow = document.createElement('div');
     guessRow.setAttribute('class', 'guessRow');
@@ -115,7 +118,8 @@ GameBoard.prototype.getGuessArray = function() {
     // this css selector is grabbing the row with guess count and the individual box using the index
     let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i + 1})`);
     // add the selected elements background color to the array
-    guessArr.push(currentElement.style.background);
+    console.log(getHSLString(currentElement));
+    guessArr.push(getHSLString(currentElement));
   }
   // return this array so it can be pushed onto the previous guess array
   return guessArr;
@@ -182,12 +186,27 @@ GameBoard.prototype.clear = function() {
 // HELPER FUNCTIONS
 
 // this function will happens when the user selects a color, its the handler on the color board event listener
+
+function getHSLString(e) {
+  let boardArr = document.querySelectorAll('.colorBox');
+  let pickedIndex = -1;
+  for(let i = 0; i < boardArr.length; i++) {
+    if (boardArr[i].style.background === e.style.background) {
+      pickedIndex = i;
+      break;
+    }
+  }
+  return currentUser.gameBoard.colorArray[pickedIndex];
+}
+
 function handleColorPick(event) {
   // I made an array of all the individual boxes so it would be easy to select the one I need
   let boxArray = document.querySelectorAll('.guessRow>*');
 
+
   // this stores the string of the color of what was clicked
-  let color = event.target.style.background;
+  // let color = event.target.style.background; this doesn't work because it's rgb
+  let color = getHSLString(event.target);
 
   // this changes the background color box to the clicked color
   // i selected the box by taking the gamecounter from the gameboard and using it as the index in the box array
@@ -200,7 +219,6 @@ function handleColorPick(event) {
   if(currentUser.gameBoard.gameCounter % 5 === 0) {
     // call the handle complete guess function to determine if they won or update the board accordingly
     let winner = handleCompleteGuess();
-
     // if they did win, I just have an alert in there for now but we can do some cooler stuff
     if (winner) {
       // if they win, remove the event listener and tell them they win!
@@ -218,13 +236,11 @@ function handleCompleteGuess() {
 
   // call the getGuessArray, this function grabs all five colors in the guess and stores them in an array
   let guess = currentUser.gameBoard.getGuessArray();
-
   // take the guess gotten from getGuessArray and add it to previous guess array in gameboard object w/ addGuess function
   currentUser.gameBoard.addGuess(guess);
 
   // compare the guess with the correct answer, checkGuess will return an array that indicates which colors are right or wrong
   let compareArr = currentUser.gameBoard.checkGuess();
-
   // if check guess returns an array that shows all colors are in the correct spot, alert the user
   if(compareArr[0] === 1 && compareArr[1] === 1 && compareArr[2] === 1 && compareArr[3] === 1 && compareArr[4] === 1) {
     winner = true;
@@ -240,7 +256,7 @@ function handleCompleteGuess() {
 // call this function in the game board constructor when a new game is started
 // this function accepts the array of possible colors and picks 5 of them to be the winning combination and returns that combination as an array
 function getCorrectOrder(colorArray) {
- // initial index to store winning combo
+// initial index to store winning combo
   let winningCombo = [];
 
   // while the winningCombo array is less than
@@ -255,7 +271,6 @@ function getCorrectOrder(colorArray) {
       // push the unique color into the winningCombo array
       winningCombo.push(colorArray[randColor]);
     }
-    console.log(winningCombo);
   }
 
   // return the array of 5 unique, random colors
@@ -326,12 +341,10 @@ function generateRandomColors() {
   for (let i = 0; i < hueObjectsArray.length; i++)
   {
     let randomHue = getARandomColorInRange(hueObjectsArray[i]);
-    console.log(randomHue);
     // push hsl with random hue, 50% saturation, 50% lightness
 
     hslArray.push(`hsl(${randomHue},60%,50%)`);
 
-    console.log(hslArray[i]);
   }
   // return an array of hsl strings
   return hslArray;
@@ -400,7 +413,7 @@ function getLocalStorage() {
 function createNewUser() {
   let userName = document.getElementById('userName');
   let player = document.createElement('input');
-  player.type='text'; 
+  player.type='text';
   player.id='name';
   player.name = 'name';
   let playerLabel = document.createElement('label');
