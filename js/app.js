@@ -4,7 +4,8 @@
 // User Array from local storage, current user
 
 // i just made a game board to test if it actually rendered, it works so far :)
-// let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
+console.log(generateRandomColors());
+let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(generateRandomColors(), ['orange', 'red', 'blue', 'green', 'purple']));
 
 
 
@@ -86,7 +87,7 @@ function renderBoard() {
   // colorBoard is the window into the DOM
   let colorBoard = document.querySelector('#colorBoard');
   // this loop makes the six boxes that will show the possible colors
-  for(let i = 0; i < 6; i++) {
+  for(let i = 0; i < currentUser.gameBoard.colorArray.length; i++) {
     // create the box div
     let colorBox = document.createElement('div');
     colorBox.setAttribute('class', 'colorBox');
@@ -243,7 +244,6 @@ function getCorrectOrder() {
 // call this function in the game board constructor when a new game is started
 // credit for inspiration: https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html#:~:text=that%20is%20run%20like%20this,push(randomRgbaString(1))%3B
 function generateRandomColors() {
-  console.log('hi');
   // hue ranges
   // reds: 0 - 18 && 340 - 360
   let redHues = {
@@ -288,6 +288,15 @@ function generateRandomColors() {
   };
   // set hue objects into an array
   let hueObjectsArray = [
+    redHues,
+    orangeHues,
+    yellowsHues,
+    greenHues,
+    cyanHues,
+    blueHues,
+    violetHues,
+    magentaHues
+  ];
 
 
   // empty array to store hsl strings
@@ -299,7 +308,7 @@ function generateRandomColors() {
     let randomHue = getARandomColorInRange(hueObjectsArray[i]);
     console.log(randomHue);
     // push hsl with random hue, 50% saturation, 50% lightness
-    hslArray.push(`hsl(${randomHue},50%,50%)`);
+    hslArray.push(`hsl(${randomHue}, 50%, 50%)`);
     console.log(hslArray[i]);
   }
   // return an array of hsl strings
