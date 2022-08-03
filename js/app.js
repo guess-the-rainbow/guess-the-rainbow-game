@@ -242,45 +242,77 @@ function getCorrectOrder() {
 // credit for inspiration: https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html#:~:text=that%20is%20run%20like%20this,push(randomRgbaString(1))%3B
 function generateRandomColors() {
 
-  // hue ranges
-  // reds: 0 - 18 && 340 - 360
-  // oranges: 20 - 48
-  // yellows: 52 - 65
-  // greens: 68 - 155
-  // cyans: 163 - 182
-  // blues: 185 - 255
-  // violets: 259 - 283
-  // magentas: 286 - 331
+  let hueObjectsArray = [
+    // hue ranges
+    // reds: 0 - 18 && 340 - 360
+    redHues = {
+      // -20 is the same as 340
+      minRange: -20,
+      maxRange: 18
+    },
+    // oranges: 20 - 48
+    orangeHues = {
+      minRange: 20,
+      maxRange: 40
+    },
+    // yellows: 52 - 65
+    yellowsHues = {
+      minRange: 52,
+      maxRange: 65
+    },
+    // greens: 68 - 155
+    greenHues = {
+      minRange: 68,
+      maxRange: 155
+    },
+    // cyans: 163 - 182
+    cyanHues = {
+      minRange: 163,
+      maxRange: 182
+    },
+    // blues: 185 - 255
+    blueHues = {
+      minRange: 185,
+      maxRange: 255
+    },
+    // violets: 259 - 283
+    violetHues = {
+      minRange: 259,
+      maxRange: 283
+    },
+    // magentas: 286 - 331
+    magentaHues = {
+      minRange: 286,
+      maxRange: 331
+    },
+];
 
-  // saturation range: 50 - 100
-
-  // lightness range: 25 - 67
-
-  // use random number generator to set ranges for each color
-
-
-  // make an empty array to store hsl strings
+  // empty array to store hsl strings
   let hslArray = [];
-  // hsl string literal template:
-  // `hsla(${hue},${saturation}%,${lightness}%)`
-
+  // use random number generator to set ranges for each hue range
   // get random number for hue
-  for (let i = 0; i < 8; i++)
+  for (let i = 0; i < hueObjectsArray; i++)
   {
-    let randomHue = getRandomNumber()
+    let randomHue = getARandomColorInRange(hueObjectsArray[i]);
+    // push hsl with random hue, 50% saturation, 50% lightness
+    hslArray.push(`hsl(${randomHue},50%,50%)`);
   }
-  // put that number into string literal to make hsl string
-  // push color string onto array
-  // return array
+  // return an array of hsl strings
+  return hslArray;
 }
 
-// this function gets single random hsl value with a specified range
-function getARandomColorInRange()
+// this function gets single random hsl value within a specified range
+// pass in a colorObject with minRange and maxRange properties
+function getARandomColorInRange(colorObject)
 {
-  let hueInRange = getRandomNumber(minRange, maxRange);
+  // get a random hue within the colorObject's min and max
+  let hueInRange = getRandomNumber(colorObject.minRange, colorObject.maxRange);
+  // return random for that color range
+  return hueInRange;
 }
 
 // generates a random number withing a specified range
+// used to generate random hue values, get random indices from an array, and more
 function getRandomNumber(min, max)
 {
   return Math.floor(Math.random() * (max - min + 1)) + min;
