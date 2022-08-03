@@ -6,6 +6,7 @@
 // i just made a game board to test if it actually rendered, it works so far :)
 let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
 
+
 // i think this render board method should also happen in the driver code but it's here for now
 renderBoard();
 
@@ -34,7 +35,7 @@ User.prototype.updateStats = function() {
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
-function GameBoard(colorArray = generateRandomColors(), correctOrderArr = getCorrectOrder(), previousGuesses = [], gameCounter = 0) {
+function GameBoard(colorArray, correctOrderArr, previousGuesses = [], gameCounter = 0) {
   // all color arrays will be in this format
   // ['hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)'];
   // color array holds 6 possible random colors, correct answer holds the random word
@@ -232,10 +233,28 @@ function handleCompleteGuess() {
 }
 
 // call this function in the game board constructor when a new game is started
-function getCorrectOrder() {
-  // generate a random number between 0 and dictionary word array length minus one
-  // get the word stored in the array at that randomly generated index
-  // return this word
+// this function accepts the array of possible colors and picks 5 of them to be the winning combination and returns that combination as an array
+function getCorrectOrder(colorArray) {
+ // initial index to store winning combo
+  let winningCombo = [];
+
+  // while the winningCombo array is less than
+  while(winningCombo.length < 5)
+  {
+    // get a random number associated with an index int the colorArray
+    let randColor = getRandomNumber(0, (colorArray.length-1));
+
+    // if the winningCombo array doesn't have randColor in it
+    if (!winningCombo.includes(randColor))
+    {
+      // push the unique color into the winningCombo array
+      winningCombo.push(colorArray[randColor]);
+    }
+    console.log(winningCombo);
+  }
+
+  // return the array of 5 unique, random colors
+  return winningCombo;
 }
 
 // call this function in the game board constructor when a new game is started
@@ -349,9 +368,8 @@ function driver() {
 
   // if user exists already
   // set the current user variable to that object from the array
-  
 
-  // render the gameboard that is stored in the User object
+  // render the game board that is stored in the User object
 }
 
 
@@ -387,4 +405,5 @@ function updateLocalStorage() {
 
 }
 
-generateRandomColors();
+let testColorArray = generateRandomColors();
+getCorrectOrder(testColorArray);
