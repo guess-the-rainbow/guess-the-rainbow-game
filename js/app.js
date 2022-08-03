@@ -69,7 +69,7 @@ function renderBoard() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
-  for(let y = 0; y < currentUser.gameBoard.colorArray.length; y++) {
+  for(let y = 0; y < 6; y++) {
     // guess row will hold colors for an entire guess
     let guessRow = document.createElement('div');
     guessRow.setAttribute('class', 'guessRow');
