@@ -177,28 +177,57 @@ GameBoard.prototype.clear = function() {
 
 // this function will happens when the user selects a color, its the handler on the color board event listener
 function handleColorPick(event) {
+  // I made an array of all the individual boxes so it would be easy to select the one I need
   let boxArray = document.querySelectorAll('.guessRow>*');
+
+  // this stores the string of the color of what was clicked
   let color = event.target.style.background;
+
+  // this changes the background color box to the clicked color
+  // i selected the box by taking the gamecounter from the gameboard and using it as the index in the box array
   boxArray[currentUser.gameBoard.gameCounter].style.background = color;
+
+  // increment game counter so it selects the next box next time
   currentUser.gameBoard.gameCounter++;
+
+  // if the game counter divided by 5 does not have a remainder, then the 5 boxes have been filled
   if(currentUser.gameBoard.gameCounter % 5 === 0) {
+    // call the handle complete guess function to determine if they won or update the board accordingly
     let winner = handleCompleteGuess();
+
+    // if they did win, I just have an alert in there for now but we can do some cooler stuff
     if (winner) {
+      // if they win, remove the event listener and tell them they win!
       document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
       alert('you win, this is a place holder for something cooler');
     }
   }
 }
 
+
+// this function is called in handle color pick after a complete guess of five colors is made
 function handleCompleteGuess() {
+  // create a boolean to return to indicate if user has won
   let winner = false;
+
+  // call the getGuessArray, this function grabs all five colors in the guess and stores them in an array
   let guess = currentUser.gameBoard.getGuessArray();
+
+  // take the guess gotten from getGuessArray and add it to previous guess array in gameboard object w/ addGuess function
   currentUser.gameBoard.addGuess(guess);
+
+  // compare the guess with the correct answer, checkGuess will return an array that indicates which colors are right or wrong
   let compareArr = currentUser.gameBoard.checkGuess();
+
+  // if check guess returns an array that shows all colors are in the correct spot, alert the user
   if(compareArr[0] === 1 && compareArr[1] === 1 && compareArr[2] === 1 && compareArr[3] === 1 && compareArr[4] === 1) {
     winner = true;
   }
+
+  // use the compare array to update the board
   currentUser.gameBoard.updateBoard(compareArr);
+
+  // return if they won so the handleColorPick functions knows if they won
   return winner;
 }
 
