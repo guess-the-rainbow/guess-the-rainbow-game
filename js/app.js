@@ -4,7 +4,9 @@
 // User Array from local storage, current user
 
 // i just made a game board to test if it actually rendered, it works so far :)
-let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
+// let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
+
+
 
 // i think this render board method should also happen in the driver code but it's here for now
 renderBoard();
@@ -60,7 +62,7 @@ function renderBoard() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
-  for(let y = 0; y < 6; y++) {
+  for(let y = 0; y < currentUser.gameBoard.colorArray.length; y++) {
     // guess row will hold colors for an entire guess
     let guessRow = document.createElement('div');
     guessRow.setAttribute('class', 'guessRow');
@@ -286,16 +288,7 @@ function generateRandomColors() {
   };
   // set hue objects into an array
   let hueObjectsArray = [
-    redHues,
-    orangeHues,
-    yellowsHues,
-    greenHues,
-    cyanHues,
-    blueHues,
-    violetHues,
-    magentaHues,
-  ];
-  console.log(hueObjectsArray[0]);
+
 
   // empty array to store hsl strings
   let hslArray = [];
