@@ -429,6 +429,7 @@ function getUser() {
   globalUserName = name.value;
   let userForm = document.querySelector('#userName');
   userForm.innerHTML = '';
+  renderBoard();
 }
 
 // this function will get variables out of local storage set initialize the user object array global variables
