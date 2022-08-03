@@ -153,62 +153,49 @@ function getCorrectOrder() {
 function generateRandomColors() {
 
   let hueObjectsArray = [
-  // hue ranges
-  // reds: 0 - 18 && 340 - 360
-  redHues = {
-    // -20 is the same as 340
-    minRange: -20,
-    maxRange: 18
-  },
-  // oranges: 20 - 48
-  orangeHues = {
-    minRange: 20,
-    maxRange: 40
-  },
-  // yellows: 52 - 65
-  let yellowsHues = {
-    minRange: 52,
-    maxRange: 65
-  };
-  // greens: 68 - 155
-  let greenHues = {
-    minRange: 68,
-    maxRange: 155
-  };
-  // cyans: 163 - 182
-  let cyanHues = {
-    minRange: 163,
-    maxRange: 182
-  };
-  // blues: 185 - 255
-  let blueHues = {
-    minRange: 185,
-    maxRange: 255
-  };
-  // violets: 259 - 283
-  let violetHues = {
-    minRange: 259,
-    maxRange: 283
-  };
-  // magentas: 286 - 331
-  let magentaHues = {
-    minRange: 286,
-    maxRange: 331
-  }
+    // hue ranges
+    // reds: 0 - 18 && 340 - 360
+    redHues = {
+      // -20 is the same as 340
+      minRange: -20,
+      maxRange: 18
+    },
+    // oranges: 20 - 48
+    orangeHues = {
+      minRange: 20,
+      maxRange: 40
+    },
+    // yellows: 52 - 65
+    yellowsHues = {
+      minRange: 52,
+      maxRange: 65
+    },
+    // greens: 68 - 155
+    greenHues = {
+      minRange: 68,
+      maxRange: 155
+    },
+    // cyans: 163 - 182
+    cyanHues = {
+      minRange: 163,
+      maxRange: 182
+    },
+    // blues: 185 - 255
+    blueHues = {
+      minRange: 185,
+      maxRange: 255
+    },
+    // violets: 259 - 283
+    violetHues = {
+      minRange: 259,
+      maxRange: 283
+    },
+    // magentas: 286 - 331
+    magentaHues = {
+      minRange: 286,
+      maxRange: 331
+    },
 ];
-  let  = [
-    redHues,
-    orangeHues,
-    yellowsHues,
-    greenHues,
-    cyanHues,
-    blueHues,
-    violetHues,
-    magentaHues,
-  ];
-  // saturation range: 50 - 100
-
-  // lightness range: 25 - 67
 
   // empty array to store hsl strings
   let hslArray = [];
