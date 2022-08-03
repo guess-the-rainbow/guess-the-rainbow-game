@@ -3,19 +3,21 @@
 // GLOBAL VARIABLES
 // User Array from local storage, current user
 let allUserArray;
+let globalUserName;
+let currentUser;
 
 // i just made a game board to test if it actually rendered, it works so far :)
 
-let colorArr = generateRandomColors();
-let combo = getCorrectOrder(colorArr);
-console.log(combo);
-let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(colorArr, combo));
+// let colorArr = generateRandomColors();
+// let combo = getCorrectOrder(colorArr);
+// console.log(combo);
+// let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(colorArr, combo));
 
 
 
 
 // i think this render board method should also happen in the driver code but it's here for now
-renderBoard();
+// renderBoard();
 
 
 
@@ -27,7 +29,7 @@ renderBoard();
     highestWinStreak:
     GameBoard: (it's an object)
   */
-function User(username, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0, gameBoard = new GameBoard())
+function User(username, gameBoard, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0)
 {
   this.username = username;
   this.totalGamesWon = totalGamesWon;
@@ -118,7 +120,6 @@ GameBoard.prototype.getGuessArray = function() {
     // this css selector is grabbing the row with guess count and the individual box using the index
     let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i + 1})`);
     // add the selected elements background color to the array
-    console.log(getHSLString(currentElement));
     guessArr.push(getHSLString(currentElement));
   }
   // return this array so it can be pushed onto the previous guess array
@@ -256,7 +257,6 @@ function handleCompleteGuess() {
 // call this function in the game board constructor when a new game is started
 // this function accepts the array of possible colors and picks 5 of them to be the winning combination and returns that combination as an array
 function getCorrectOrder(colorArray) {
-
 // initial index to store winning combo
   let winningCombo = [];
 
@@ -267,13 +267,13 @@ function getCorrectOrder(colorArray) {
     let randColor = getRandomNumber(0, (colorArray.length-1));
 
     // if the winningCombo array doesn't have randColor in it
-    if (!winningCombo.includes(colorArray[randColor]))
+    if (!winningCombo.includes(colorArr[randColor]))
     {
       // push the unique color into the winningCombo array
       winningCombo.push(colorArray[randColor]);
     }
   }
-
+  console.log(winningCombo);
   // return the array of 5 unique, random colors
   return winningCombo;
 }
@@ -390,6 +390,23 @@ function driver() {
   // set the current user variable to that object from the array
 
   // render the game board that is stored in the User object
+
+  getLocalStorage();
+  createNewUser();
+
+  if(allUserArray) {
+    for(let user of allUserArray) {
+      if(user.name === globalUserName) {
+        currentUser = user;
+      }
+    }
+  } else {
+    let newGame = new GameBoard(generateRandomColors(), getCorrectOrder);
+    console.log(newGame);
+    currentUser = new User(globalUserName, newGame);
+  }
+
+  renderBoard();
 }
 
 
@@ -399,7 +416,7 @@ function driver() {
 function getUser() {
   let name = document.getElementById('name');
   console.log(name.value);
-  return name.value;
+  globalUserName = name.value;
 }
 
 // this function will get variables out of local storage set initialize the user object array global variables
@@ -419,7 +436,7 @@ function createNewUser() {
   player.name = 'name';
   let playerLabel = document.createElement('label');
   playerLabel.for='name';
-  playerLabel.innerHTML='Hello there. Please enter your name.'
+  playerLabel.innerHTML='Hello there. Please enter your name.';
   let nameButton = document.createElement('button');
   nameButton.type='button';
   nameButton.innerHTML='Submit';
@@ -431,14 +448,12 @@ function createNewUser() {
 }
 
 
-createNewUser();
-
-
-let testColorArray = generateRandomColors();
-getCorrectOrder(testColorArray);
+// let testColorArray = generateRandomColors();
+// getCorrectOrder(testColorArray);
 
 
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
-function updateLocalStorage(userObj) {
+function updateLocalStorage() {
   localStorage.setItem('storedUsers', allUserArray);
 }
+
