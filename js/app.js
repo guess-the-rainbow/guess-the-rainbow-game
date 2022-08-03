@@ -10,6 +10,7 @@ let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(generateRandomColors
 
 
 
+
 // i think this render board method should also happen in the driver code but it's here for now
 renderBoard();
 
@@ -39,7 +40,7 @@ User.prototype.updateStats = function() {
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
-function GameBoard(colorArray = generateRandomColors(), correctOrderArr = getCorrectOrder(), previousGuesses = [], gameCounter = 0) {
+function GameBoard(colorArray, correctOrderArr, previousGuesses = [], gameCounter = 0) {
   // all color arrays will be in this format
   // ['hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)'];
   // color array holds 6 possible random colors, correct answer holds the random word
@@ -237,10 +238,28 @@ function handleCompleteGuess() {
 }
 
 // call this function in the game board constructor when a new game is started
-function getCorrectOrder() {
-  // generate a random number between 0 and dictionary word array length minus one
-  // get the word stored in the array at that randomly generated index
-  // return this word
+// this function accepts the array of possible colors and picks 5 of them to be the winning combination and returns that combination as an array
+function getCorrectOrder(colorArray) {
+ // initial index to store winning combo
+  let winningCombo = [];
+
+  // while the winningCombo array is less than
+  while(winningCombo.length < 5)
+  {
+    // get a random number associated with an index int the colorArray
+    let randColor = getRandomNumber(0, (colorArray.length-1));
+
+    // if the winningCombo array doesn't have randColor in it
+    if (!winningCombo.includes(randColor))
+    {
+      // push the unique color into the winningCombo array
+      winningCombo.push(colorArray[randColor]);
+    }
+    console.log(winningCombo);
+  }
+
+  // return the array of 5 unique, random colors
+  return winningCombo;
 }
 
 // call this function in the game board constructor when a new game is started
@@ -250,43 +269,43 @@ function generateRandomColors() {
   // reds: 0 - 18 && 340 - 360
   let redHues = {
     // -20 is the same as 340
-    minRange: -20,
-    maxRange: 18
+    minRange: -10,
+    maxRange: 5
   };
   // oranges: 20 - 48
   let orangeHues = {
     minRange: 20,
-    maxRange: 40
+    maxRange: 44
   };
   // yellows: 52 - 65
   let yellowsHues = {
     minRange: 52,
-    maxRange: 65
+    maxRange: 61
   };
   // greens: 68 - 155
   let greenHues = {
-    minRange: 68,
-    maxRange: 155
+    minRange: 71,
+    maxRange: 143
   };
   // cyans: 163 - 182
   let cyanHues = {
     minRange: 163,
-    maxRange: 182
+    maxRange: 186
   };
   // blues: 185 - 255
   let blueHues = {
     minRange: 185,
-    maxRange: 255
+    maxRange: 237
   };
   // violets: 259 - 283
   let violetHues = {
-    minRange: 259,
-    maxRange: 283
+    minRange: 245,
+    maxRange: 287
   };
   // magentas: 286 - 331
   let magentaHues = {
-    minRange: 286,
-    maxRange: 331
+    minRange: 296,
+    maxRange: 327
   };
   // set hue objects into an array
   let hueObjectsArray = [
@@ -300,7 +319,6 @@ function generateRandomColors() {
     magentaHues
   ];
 
-
   // empty array to store hsl strings
   let hslArray = [];
   // use random number generator to set ranges for each hue range
@@ -310,7 +328,9 @@ function generateRandomColors() {
     let randomHue = getARandomColorInRange(hueObjectsArray[i]);
     console.log(randomHue);
     // push hsl with random hue, 50% saturation, 50% lightness
-    hslArray.push(`hsl(${randomHue}, 50%, 50%)`);
+
+    hslArray.push(`hsl(${randomHue},60%,50%)`);
+
     console.log(hslArray[i]);
   }
   // return an array of hsl strings
@@ -334,6 +354,8 @@ function getRandomNumber(min, max)
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
+
 // i was thinking this could be called on page load
 function driver() {
   // getLocalStorage to initialize global variables
@@ -352,9 +374,8 @@ function driver() {
 
   // if user exists already
   // set the current user variable to that object from the array
-  
 
-  // render the gameboard that is stored in the User object
+  // render the game board that is stored in the User object
 }
 
 
@@ -397,6 +418,10 @@ function createNewUser() {
 
 
 createNewUser();
+
+
+let testColorArray = generateRandomColors();
+getCorrectOrder(testColorArray);
 
 
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
