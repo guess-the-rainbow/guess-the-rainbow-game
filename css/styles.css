@@ -28,6 +28,13 @@ body {
   height: 60px;
 }
 
+.logo {
+  position: absolute;
+  left: 25px;
+  top: 25px;
+  width: 250px;
+}
+
 .oneColor, .colorBox{
   border: solid black 1px;
   background-color: white;
@@ -39,13 +46,11 @@ body {
 
 .Sun-GIF {
   position: absolute;
-  left: 25px;
+  right: 25px;
   top: 25px;
 }
 
-.Rainbow-Clouds {
+.Rainbow {
   position: absolute;
-  right: 50px;
-  top: 25px;
-  width: 200px;
+  top: 550px;
 }
