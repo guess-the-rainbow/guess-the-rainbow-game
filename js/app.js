@@ -389,4 +389,3 @@ function updateLocalStorage() {
 }
 
 generateRandomColors();
-
