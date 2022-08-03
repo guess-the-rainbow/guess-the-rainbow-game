@@ -2,13 +2,18 @@
 
 // GLOBAL VARIABLES
 // User Array from local storage, current user
+let allUserArray;
 
 // i just made a game board to test if it actually rendered, it works so far :)
-let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
+console.log(generateRandomColors());
+let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(generateRandomColors(), ['orange', 'red', 'blue', 'green', 'purple']));
+
+
 
 
 // i think this render board method should also happen in the driver code but it's here for now
 renderBoard();
+
 
 
 // USER CONSTRUCTOR and PROTOTYPES
@@ -61,7 +66,7 @@ function renderBoard() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
-  for(let y = 0; y < 6; y++) {
+  for(let y = 0; y < currentUser.gameBoard.colorArray.length; y++) {
     // guess row will hold colors for an entire guess
     let guessRow = document.createElement('div');
     guessRow.setAttribute('class', 'guessRow');
@@ -85,7 +90,7 @@ function renderBoard() {
   // colorBoard is the window into the DOM
   let colorBoard = document.querySelector('#colorBoard');
   // this loop makes the six boxes that will show the possible colors
-  for(let i = 0; i < 6; i++) {
+  for(let i = 0; i < currentUser.gameBoard.colorArray.length; i++) {
     // create the box div
     let colorBox = document.createElement('div');
     colorBox.setAttribute('class', 'colorBox');
@@ -260,7 +265,6 @@ function getCorrectOrder(colorArray) {
 // call this function in the game board constructor when a new game is started
 // credit for inspiration: https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html#:~:text=that%20is%20run%20like%20this,push(randomRgbaString(1))%3B
 function generateRandomColors() {
-  console.log('hi');
   // hue ranges
   // reds: 0 - 18 && 340 - 360
   let redHues = {
@@ -312,7 +316,7 @@ function generateRandomColors() {
     cyanHues,
     blueHues,
     violetHues,
-    magentaHues,
+    magentaHues
   ];
 
   // empty array to store hsl strings
@@ -324,7 +328,9 @@ function generateRandomColors() {
     let randomHue = getARandomColorInRange(hueObjectsArray[i]);
     console.log(randomHue);
     // push hsl with random hue, 50% saturation, 50% lightness
+
     hslArray.push(`hsl(${randomHue},60%,50%)`);
+
     console.log(hslArray[i]);
   }
   // return an array of hsl strings
@@ -376,34 +382,50 @@ function driver() {
 // traverse through userObjects array
 // if user's name exists in any object's name property, return that object
 // if doesn't exist it will return null
-function getUser(username) {
-  
+function getUser() {
+  let name = document.getElementById('name');
+  console.log(name.value);
+  return name.value;
 }
 
 // this function will get variables out of local storage set initialize the user object array global variables
 function getLocalStorage() {
-
+  allUserArray = localStorage.get('storedUsers');
 }
 
 // in the drive conditional, call this when a new user must be created
 // it will create a new user object with the user's name
 // return the object so that it can be stored as current user and pushed onto the user array
 // credit: https://bobbyhadz.com/blog/javascript-read-file-into-array#:~:text=Use%20the%20fs.,get%20an%20array%20of%20strings.
-function createNewUser(username) {
-  
+function createNewUser() {
+  let userName = document.getElementById('userName');
+  let player = document.createElement('input');
+  player.type='text'; 
+  player.id='name';
+  player.name = 'name';
+  let playerLabel = document.createElement('label');
+  playerLabel.for='name';
+  playerLabel.innerHTML='Hello there. Please enter your name.'
+  let nameButton = document.createElement('button');
+  nameButton.type='button';
+  nameButton.innerHTML='Submit';
+  nameButton.addEventListener('click', getUser);
+  userName.appendChild(playerLabel);
+  userName.appendChild(player);
+  userName.appendChild(nameButton);
+
 }
 
-// this function will be called to create a new gameboard object
-// this will be a helper function used inside of the User constructor function to create a game board object and set it equal to the Users game board
-// this function should return the new game board object
-function createGameBoard() {
-  
-}
 
-// this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
-function updateLocalStorage() {
+createNewUser();
 
-}
 
 let testColorArray = generateRandomColors();
 getCorrectOrder(testColorArray);
+
+
+// this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
+function updateLocalStorage(userObj) {
+  localStorage.setItem('storedUsers', allUserArray);
+}
+
