@@ -120,7 +120,7 @@ GameBoard.prototype.checkGuess = function() {
   // create an empty array to hold the compare values
   // compare value key: 1 = correct, 2 = incorrect position, 3 = completely wrong
   let compareArr = [];
-  
+
   // grab the previous guess from the previous guess array stored in the users gameboard
   let currentGuess = this.previousGuesses[this.previousGuesses.length - 1];
 
@@ -143,12 +143,14 @@ GameBoard.prototype.checkGuess = function() {
   return compareArr;
 };
 
-
+// this function uses the compare array integers keys to give a the color a border color based on that key
 GameBoard.prototype.updateBoard = function (compareArr) {
   for(let i = 0; i < compareArr.length; i++) {
-    console.log(this.guessCount);
+    // use a CSS selector to grab the box that needs ta border
+    // the counter updates every guess so I had to decrement it five to update the previous five
     let key = document.querySelectorAll('.guessRow>*')[i + this.gameCounter - 5];
-    console.log(key);
+
+    // the keys are the same as from the check guess function, green border for good, grey for includes, and red for wrong
     if(compareArr[i] === 1) {
       key.style.border = 'solid green 5px';
     } else if (compareArr[i] === 2) {
@@ -159,6 +161,7 @@ GameBoard.prototype.updateBoard = function (compareArr) {
   }
 };
 
+// when we get local storage and users figured out, I think this would be a good place to
 GameBoard.prototype.renderStatsDisplay = function() {
 
 };
@@ -172,21 +175,31 @@ GameBoard.prototype.clear = function() {
 
 // HELPER FUNCTIONS
 
+// this function will happens when the user selects a color, its the handler on the color board event listener
 function handleColorPick(event) {
   let boxArray = document.querySelectorAll('.guessRow>*');
   let color = event.target.style.background;
   boxArray[currentUser.gameBoard.gameCounter].style.background = color;
   currentUser.gameBoard.gameCounter++;
   if(currentUser.gameBoard.gameCounter % 5 === 0) {
-    handleCompleteGuess();
+    let winner = handleCompleteGuess();
+    if (winner) {
+      document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
+      alert('you win, this is a place holder for something cooler');
+    }
   }
 }
 
 function handleCompleteGuess() {
+  let winner = false;
   let guess = currentUser.gameBoard.getGuessArray();
   currentUser.gameBoard.addGuess(guess);
   let compareArr = currentUser.gameBoard.checkGuess();
+  if(compareArr[0] === 1 && compareArr[1] === 1 && compareArr[2] === 1 && compareArr[3] === 1 && compareArr[4] === 1) {
+    winner = true;
+  }
   currentUser.gameBoard.updateBoard(compareArr);
+  return winner;
 }
 
 // call this function in the game board constructor when a new game is started
