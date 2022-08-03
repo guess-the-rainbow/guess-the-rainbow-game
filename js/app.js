@@ -2,7 +2,10 @@
 
 // GLOBAL VARIABLES
 // User Array from local storage, current user
-let currentUser = new User();
+// i just made a game board to test if it actually rendered, it works so far :)
+let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
+renderBoard();
+
 
 // USER CONSTRUCTOR and PROTOTYPES
 /* DONE: create User constructor with these properties:
@@ -12,13 +15,13 @@ let currentUser = new User();
     highestWinStreak:
     GameBoard: (it's an object)
   */
-function User(username, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0)
+function User(username, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0, gameBoard = new GameBoard())
 {
   this.username = username;
   this.totalGamesWon = totalGamesWon;
   this.winStreak = winStreak;
   this.highestWinStreak = highestWinStreak;
-  this.GameBoard = new GameBoard();
+  this.gameBoard = gameBoard;
 }
 
 // Prototype functions for user
@@ -46,7 +49,7 @@ GameBoard.prototype.addGuess = function(guessColorArr) {
 
 // window into the dom, create grid for guesses and create another grid for keyboard
 // // TODO: add event listeners to keyboard so the guess is added to the game board guesses array, checked, and board update
-GameBoard.prototype.renderBoard = function() {
+function renderBoard() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
@@ -70,31 +73,21 @@ GameBoard.prototype.renderBoard = function() {
   for(let i = 0; i < 6; i++) {
     let colorBox = document.createElement('div');
     colorBox.setAttribute('class', 'colorBox');
-    colorBox.style.background =`${this.colorArray[i]}`;
+    colorBox.style.background =`${currentUser.gameBoard.colorArray[i]}`;
     colorBoard.appendChild(colorBox);
     colorBoard.addEventListener('click', handleColorPick);
   }
-};
-
-// let enter = document.createElement('div');
-//   enter.setAttribute('id', 'enterButton');
-//   enter.addEventListener('click', handleGuess);
-//   colorBoard.appendChild(enter);
-
-
-// i just made a game board to test if it actually rendered, it works so far :)
-let testGame = new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], '', ['wrong']);
-testGame.renderBoard();
+}
 
 // this function will get the guess from the game board
 GameBoard.prototype.getGuessArray = function() {
   // guess count will tell me what row I need to grab from the board
   let guessCount = this.previousGuesses.length + 1;
+  console.log(guessCount);
   let guessArr = [];
   for(let i = 0; i < 5; i++) {
     // current element is the individual box in that row that i need to get the color from
-    let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i})`);
-    // add that color to the array
+    let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i + 1})`);
     guessArr.push(currentElement.style.background);
   }
   return guessArr;
@@ -102,35 +95,31 @@ GameBoard.prototype.getGuessArray = function() {
 
 
 GameBoard.prototype.checkGuess = function() {
-  // i made array to tell me if this position guess is right, wrong, or somewhere else in the array
-  // key: 1 = correct!, 2 = not in the right spot, 3 = wrong
   let compareArr = [];
-  // current guess is the last guess added to the previous guess array
   let currentGuess = this.previousGuesses[this.previousGuesses.length - 1];
+
   for(let i = 0; i < 5; i++) {
-    if (currentGuess[i] === this.correctAnswer[i]) {
+    if (currentGuess[i] === this.correctOrderArr[i]) {
       compareArr.push(1);
-    } else if (this.correctAnswer.includes(currentGuess[i])) {
+    } else if (this.correctOrderArr.includes(currentGuess[i])) {
       compareArr.push(2);
     } else {
       compareArr.push(3);
     }
   }
-  // i return this array so that it can be used to update the board
+  console.log(compareArr);
   return compareArr;
 };
 
 
-GameBoard.prototype.updateBoard = function (intArr) {
-  // i used the guess count to figure out which row i need to update
-  let guessCount = this.previousGuesses.length;
-  // then I'm gonna loop through that int array from the check guess function
-  // based on the key in the check guess function i'll change the border
-  for(let int of intArr) {
-    let key = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${int})`);
-    if(int === 1) {
+GameBoard.prototype.updateBoard = function (compareArr) {
+  for(let i = 0; i < compareArr.length; i++) {
+    console.log(this.guessCount);
+    let key = document.querySelectorAll('.guessRow>*')[i + this.gameCounter - 5];
+    console.log(key);
+    if(compareArr[i] === 1) {
       key.style.border = 'solid green 5px';
-    } else if (int === 2) {
+    } else if (compareArr[i] === 2) {
       key.style.border = 'solid grey 5px';
     } else {
       key.style.border = 'solid red 5px';
@@ -154,8 +143,18 @@ GameBoard.prototype.clear = function() {
 function handleColorPick(event) {
   let boxArray = document.querySelectorAll('.guessRow>*');
   let color = event.target.style.background;
-  boxArray[currentUser.GameBoard.gameCounter].style.background = color;
-  currentUser.GameBoard.gameCounter++;
+  boxArray[currentUser.gameBoard.gameCounter].style.background = color;
+  currentUser.gameBoard.gameCounter++;
+  if(currentUser.gameBoard.gameCounter % 5 === 0) {
+    handleCompleteGuess();
+  }
+}
+
+function handleCompleteGuess() {
+  let guess = currentUser.gameBoard.getGuessArray();
+  currentUser.gameBoard.addGuess(guess);
+  let compareArr = currentUser.gameBoard.checkGuess();
+  currentUser.gameBoard.updateBoard(compareArr);
 }
 
 // call this function in the game board constructor when a new game is started
@@ -172,13 +171,6 @@ function generateRandomColors() {
   // put that number into string literal to make hsl string
   // push color string onto array
   // return array
-}
-
-function handleGuess() {
-  let guess = currentUser.GameBoard.getGuessArray();
-  currentUser.GameBoard.addGuess(guess);
-  currentUser.GameBoard.checkGuess();
-  currentUser.GameBoard.updateBoard();
 }
 
 // i was thinking this could be called on page load
