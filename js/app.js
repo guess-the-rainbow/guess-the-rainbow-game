@@ -2,6 +2,7 @@
 
 // GLOBAL VARIABLES
 // User Array from local storage, current user
+let allUserArray;
 
 // i just made a game board to test if it actually rendered, it works so far :)
 let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
@@ -363,7 +364,7 @@ function getUser(username) {
 
 // this function will get variables out of local storage set initialize the user object array global variables
 function getLocalStorage() {
-
+  allUserArray = localStorage.get('storedUsers');
 }
 
 // in the drive conditional, call this when a new user must be created
@@ -374,16 +375,9 @@ function createNewUser(username) {
   
 }
 
-// this function will be called to create a new gameboard object
-// this will be a helper function used inside of the User constructor function to create a game board object and set it equal to the Users game board
-// this function should return the new game board object
-function createGameBoard() {
-  
-}
-
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
-function updateLocalStorage() {
-
+function updateLocalStorage(userObj) {
+  localStorage.setItem('storedUsers', allUserArray);
 }
 
 generateRandomColors();
