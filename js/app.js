@@ -240,7 +240,7 @@ function handleCompleteGuess() {
 // call this function in the game board constructor when a new game is started
 // this function accepts the array of possible colors and picks 5 of them to be the winning combination and returns that combination as an array
 function getCorrectOrder(colorArray) {
- // initial index to store winning combo
+  // initial index to store winning combo
   let winningCombo = [];
 
   // while the winningCombo array is less than
@@ -250,7 +250,7 @@ function getCorrectOrder(colorArray) {
     let randColor = getRandomNumber(0, (colorArray.length-1));
 
     // if the winningCombo array doesn't have randColor in it
-    if (!winningCombo.includes(randColor))
+    if (!winningCombo.includes(colorArray[randColor]))
     {
       // push the unique color into the winningCombo array
       winningCombo.push(colorArray[randColor]);
@@ -428,4 +428,3 @@ getCorrectOrder(testColorArray);
 function updateLocalStorage(userObj) {
   localStorage.setItem('storedUsers', allUserArray);
 }
-
