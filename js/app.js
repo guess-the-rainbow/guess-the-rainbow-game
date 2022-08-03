@@ -2,8 +2,11 @@
 
 // GLOBAL VARIABLES
 // User Array from local storage, current user
+
 // i just made a game board to test if it actually rendered, it works so far :)
 let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(['red', 'green', 'blue', 'black', 'purple', 'orange'], ['orange', 'red', 'blue', 'green', 'purple']));
+
+// i think this render board method should also happen in the driver code but it's here for now
 renderBoard();
 
 
@@ -32,12 +35,18 @@ User.prototype.updateStats = function() {
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
 function GameBoard(colorArray = generateRandomColors(), correctOrderArr = getCorrectOrder(), previousGuesses = [], gameCounter = 0) {
-  // color array holds 6 possible random colors, correct answer holds the random word
-  // previous guess holds an array of user guesses
+  // all color arrays will be in this format
   // ['hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)'];
+  // color array holds 6 possible random colors, correct answer holds the random word
   this.colorArray = colorArray;
-  this.correctOrderArr = correctOrderArr;
+
+  // previous guess holds an array of user guesses
   this.previousGuesses = previousGuesses;
+
+  // correct order array is colors picked from the randomly generated array
+  this.correctOrderArr = correctOrderArr;
+
+  // this will keep track of where the user is on the board
   this.gameCounter = gameCounter;
 }
 
@@ -47,34 +56,44 @@ GameBoard.prototype.addGuess = function(guessColorArr) {
   this.previousGuesses.push(guessColorArr);
 };
 
-// window into the dom, create grid for guesses and create another grid for keyboard
-// // TODO: add event listeners to keyboard so the guess is added to the game board guesses array, checked, and board update
 function renderBoard() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
   for(let y = 0; y < 6; y++) {
-    // word div will create a row that will hold boxes for each letter
+    // guess row will hold colors for an entire guess
     let guessRow = document.createElement('div');
     guessRow.setAttribute('class', 'guessRow');
+
+    // this line add that row to the entire container
     guessDiv.appendChild(guessRow);
+
+    // this loop will go through each row and make five individual boxes
     for(let x = 0; x < 5; x++) {
-      // oneColor box will hold the letter that the user chooses
-      // once I make an event handler I will add a event listener
+      // one color holds the div that color the user guesses shows up in
       let oneColor = document.createElement('div');
       oneColor.setAttribute('class', 'oneColor');
+
+      // append that individual box to the row
       guessRow.appendChild(oneColor);
     }
   }
+  // display board complete
 
-  // this loop will create six boxes that hold the colors that the user can click
-  // this will need an event listener too, but i'm gonna wait til we have an event handler
+  // create the color chooser options at the bottom of the page
+  // colorBoard is the window into the DOM
   let colorBoard = document.querySelector('#colorBoard');
+  // this loop makes the six boxes that will show the possible colors
   for(let i = 0; i < 6; i++) {
+    // create the box div
     let colorBox = document.createElement('div');
     colorBox.setAttribute('class', 'colorBox');
+
+    // set the background color to the using the color array in game board object
     colorBox.style.background =`${currentUser.gameBoard.colorArray[i]}`;
+    // append the box to the color board div(window into dom)
     colorBoard.appendChild(colorBox);
+    // add event listener to the color board so users can pick a color
     colorBoard.addEventListener('click', handleColorPick);
   }
 }
