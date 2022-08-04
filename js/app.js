@@ -183,7 +183,7 @@ GameBoard.prototype.updateBoard = function (compareArr, counterStart) {
     if(compareArr[i] === 1) {
       key.style.border = 'solid green 5px';
     } else if (compareArr[i] === 2) {
-      key.style.border = 'solid grey 5px';
+      key.style.border = 'solid yellow 5px';
     } else {
       key.style.border = 'solid red 5px';
     }
@@ -209,9 +209,6 @@ GameBoard.prototype.clear = function() {
   let playAgainButton = document.createElement('button');
   playAgainButton.innerHTML = 'Play Again';
   playAgainButton.addEventListener('click', () => {
-    let newColArr = generateRandomColors();
-    let newColCombo = getCorrectOrder(newColArr);
-    currentUser.gameBoard = new GameBoard(newColArr, newColCombo);
     location.reload();
   });
   gameBoard.appendChild(playAgainButton);
@@ -257,14 +254,17 @@ function handleColorPick(event) {
     // call the handle complete guess function to determine if they won or update the board accordingly
       let winner = handleCompleteGuess();
       // if they did win, I just have an alert in there for now but we can do some cooler stuff
-      if (winner) {
-      // if they win, remove the event listener and tell them they win!
-        document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
-        alert('you win, this is a place holder for something cooler');
+      if(currentUser.gameBoard.gameCounter === 30) {
+        if(winner) {
+          currentUser.updateStats;
+        } else {
+          currentUser.updateStats;
+        }
         currentUser.gameBoard.clear();
-      }
-      if (!winner && currentUser.gameBoard.gameCounter === 30) {
-        currentUser.gameBoard.clear();
+        let newColArr = generateRandomColors();
+        let newColCombo = getCorrectOrder(newColArr);
+        currentUser.gameBoard = new GameBoard(newColArr, newColCombo);
+        updateLocalStorage();
       }
     }
   }
@@ -289,7 +289,6 @@ function handleCompleteGuess() {
   }
 
   // use the compare array to update the board
-  console.log(currentUser.gameBoard.gameCounter);
   currentUser.gameBoard.updateBoard(compareArr, currentUser.gameBoard.gameCounter - 5);
   updateLocalStorage();
   // return if they won so the handleColorPick functions knows if they won
@@ -449,7 +448,6 @@ function checkIfUserExists() {
   // once we have the current user create we can render the user's game board
   startGame = true;
   if(startGame) {
-    console.log('start game');
     currentUser.gameBoard.renderBoard();
     addPreviousGuesses();
     let startUpdateAt = 0;
