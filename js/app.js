@@ -329,7 +329,11 @@ function generateRandomColors() {
     console.log(randomHue);
     // push hsl with random hue, 50% saturation, 50% lightness
 
-    hslArray.push(`hsl(${randomHue},60%,50%)`);
+    // random saturation
+    let randomSaturation = getRandomNumber(50, 65);
+    let randomLightness = getRandomNumber(50, 70);
+    // random lightness
+    hslArray.push(`hsl(${randomHue},${randomSaturation}%,${randomLightness}%)`);
 
     console.log(hslArray[i]);
   }
