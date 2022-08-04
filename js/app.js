@@ -110,6 +110,12 @@ GameBoard.prototype.renderBoard = function() {
   }
 };
 
+// function addPreviousGuesses() {
+//   for(let i = 0; i < previousGuesses.length; i++) {
+
+//   }
+// }
+
 // this function will get the guess from the game board
 GameBoard.prototype.getGuessArray = function() {
   // guess count will tell me what row I need to grab from the board
@@ -227,6 +233,10 @@ function handleColorPick(event) {
       // if they win, remove the event listener and tell them they win!
       document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
       alert('you win, this is a place holder for something cooler');
+      currentUser.updateStats(winner);
+    }
+    if (!winner && gameCounter === 30) {
+      currentUser.updateStats(winner);
     }
   }
 }
