@@ -180,7 +180,7 @@ GameBoard.prototype.updateBoard = function (compareArr) {
     if(compareArr[i] === 1) {
       key.style.border = 'solid green 5px';
     } else if (compareArr[i] === 2) {
-      key.style.border = 'solid light grey 5px';
+      key.style.border = 'solid yellow 5px';
     } else {
       key.style.border = 'solid red 5px';
     }
