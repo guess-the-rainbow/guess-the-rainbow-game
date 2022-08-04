@@ -387,8 +387,8 @@ function generateRandomColors() {
     // push hsl with random hue, 50% saturation, 50% lightness
 
     // random saturation
-    let randomSaturation = getRandomNumber(50, 65);
-    let randomLightness = getRandomNumber(50, 70);
+    let randomSaturation = getRandomNumber(65, 85);
+    let randomLightness = getRandomNumber(50, 60);
     // random lightness
     hslArray.push(`hsl(${randomHue},${randomSaturation}%,${randomLightness}%)`);
 
