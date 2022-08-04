@@ -58,13 +58,11 @@ function GameBoard(colorArray, correctOrderArr, previousGuesses = [], gameCounte
   // ['hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)'];
   // color array holds 6 possible random colors, correct answer holds the random word
   this.colorArray = colorArray;
-  console.log(this.colorArray);
   // previous guess holds an array of user guesses
   this.previousGuesses = previousGuesses;
 
   // correct order array is colors picked from the randomly generated array
   this.correctOrderArr = correctOrderArr;
-  console.log(this.correctOrderArr);
   // this will keep track of where the user is on the board
   this.gameCounter = gameCounter;
 }
@@ -179,6 +177,8 @@ GameBoard.prototype.updateBoard = function (compareArr, counterStart) {
   for(let i = 0; i < compareArr.length; i++) {
     // use a CSS selector to grab the box that needs ta border
     // the counter updates every guess so I had to decrement it five to update the previous five
+    console.log(counterStart);
+    console.log(counterStart + i + 1);
     let key = document.querySelectorAll('.guessRow>*')[i + counterStart];
 
     // the keys are the same as from the check guess function, green border for good, grey for includes, and red for wrong
@@ -278,7 +278,8 @@ function handleCompleteGuess() {
   }
 
   // use the compare array to update the board
-  currentUser.gameBoard.updateBoard(compareArr, currentUser.gameBoard.currentGuess - 5);
+  console.log(currentUser.gameBoard.gameCounter);
+  currentUser.gameBoard.updateBoard(compareArr, currentUser.gameBoard.gameCounter - 5);
   updateLocalStorage();
   // return if they won so the handleColorPick functions knows if they won
   return winner;
