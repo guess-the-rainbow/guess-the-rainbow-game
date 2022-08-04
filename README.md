@@ -10,7 +10,7 @@ Rhea Carillo, Alfredo Orquiz, and Brooke Heck
 ### Links and Resources
 
 * [GitHub Repo](https://github.com/guess-the-rainbow/guess-the-rainbow-game/tree/main)
-* [GitHub Page]()
+* [GitHub Page](https://guess-the-rainbow.github.io/guess-the-rainbow-game/)
 * [Trello Project Board](https://trello.com/b/rofgMZyS/guess-the-rainbow)
 * [Domain Model Flow Chart](https://miro.com/app/board/uXjVOicUZLk=/)
 * [Project Wireframe](https://wireframe.cc/zTj9t9)
