@@ -10,11 +10,66 @@ body {
   align-items: center;
 }
 
+body p {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, yellow, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Rock Salt', cursive;
+  font-size: xx-large;
+  font-weight: bolder;
+  margin-left: 20px;
+}
+
+button {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  border: none;
+  font-family: 'Rock Salt', cursive;
+  font-size: large;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+input {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  border: outset;
+  font-family: 'Rock Salt', cursive;
+  font-size: large;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+label {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, yellow, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Rock Salt', cursive;
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
 #guessDiv {
+  background-color: #B0D3F8;
   display: flex;
   flex-direction: column;
   margin-top: 30px;
   margin-bottom: 10px;
+}
+
+#userName {
+  margin-top: 300px;
+  width: 475px;
 }
 
 #colorBoard {
@@ -35,18 +90,6 @@ body {
   width: 250px;
 }
 
-body p {
-  background-image: linear-gradient(to left, violet, indigo, green, blue, yellow, orange, red);
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-family: 'Rock Salt', cursive;
-  font-size: xx-large;
-  font-weight: bolder;
-  margin-left: 20px;
-}
-
 .oneColor, .colorBox{
   border: solid black 1px;
   background-color: white;
@@ -64,5 +107,8 @@ body p {
 
 .Rainbow {
   position: absolute;
-  top: 550px;
+  top: 450px;
+  height: 90%;
+  width: 100%;
+  object-fit: cover;
 }

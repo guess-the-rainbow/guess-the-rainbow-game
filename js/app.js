@@ -479,7 +479,7 @@ function createNewUser() {
   player.name = 'name';
   let playerLabel = document.createElement('label');
   playerLabel.for='name';
-  playerLabel.innerHTML='Hello there. Please enter your name.';
+  playerLabel.innerHTML='Please enter your name.';
   let nameButton = document.createElement('button');
   nameButton.type='button';
   nameButton.innerHTML='Submit';
