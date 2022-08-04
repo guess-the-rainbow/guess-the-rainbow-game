@@ -32,17 +32,24 @@ let currentUserIndex = 0;
   */
 function User(username, gameBoard, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0)
 {
+  // the player's name
   this.username = username;
+  // how many total games this player has won
   this.totalGamesWon = totalGamesWon;
+  // current record of how games they've won in a row 
   this.winStreak = winStreak;
+  // highest winStreak they've ever had
   this.highestWinStreak = highestWinStreak;
+  // the game board for the current user's game state
   this.gameBoard = gameBoard;
 }
 
 // Prototype functions for user
 // TODO: create function to update properties of User object's stats
 User.prototype.updateStats = function() {
-
+  // update current user's properties once a game ends
+  // make sure the game board is cleared at the end of the game
+  // then make call to local storage function with the updated stats and cleared out game board
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
@@ -68,6 +75,7 @@ GameBoard.prototype.addGuess = function(guessColorArr) {
   this.previousGuesses.push(guessColorArr);
 };
 
+// this function will display the play area to the user
 GameBoard.prototype.renderBoard = function() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
@@ -95,7 +103,7 @@ GameBoard.prototype.renderBoard = function() {
   // create the color chooser options at the bottom of the page
   // colorBoard is the window into the DOM
   let colorBoard = document.querySelector('#colorBoard');
-  // this loop makes the six boxes that will show the possible colors
+  // this loop makes the color selection box elements for user input
   for(let i = 0; i < currentUser.gameBoard.colorArray.length; i++) {
     // create the box div
     let colorBox = document.createElement('div');
@@ -127,7 +135,7 @@ GameBoard.prototype.getGuessArray = function() {
   return guessArr;
 };
 
-// takes an array from the previous guess and compares it to the correct color arr
+// compares the user's current round of guessing to the answer key
 GameBoard.prototype.checkGuess = function() {
   // create an empty array to hold the compare values
   // compare value key: 1 = correct, 2 = incorrect position, 3 = completely wrong
@@ -166,16 +174,19 @@ GameBoard.prototype.updateBoard = function (compareArr) {
     if(compareArr[i] === 1) {
       key.style.border = 'solid green 5px';
     } else if (compareArr[i] === 2) {
-      key.style.border = 'solid grey 5px';
+      key.style.border = 'solid light grey 5px';
     } else {
       key.style.border = 'solid red 5px';
     }
   }
 };
 
-// when we get local storage and users figured out, I think this would be a good place to
+// generate elements to display user's play statistics
 GameBoard.prototype.renderStatsDisplay = function() {
-
+    // get container
+    // get make element for each play stat in User
+    // give content
+    // append to DOM
 };
 
 
