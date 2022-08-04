@@ -3,19 +3,22 @@
 // GLOBAL VARIABLES
 // User Array from local storage, current user
 let allUserArray;
+let globalUserName;
+let currentUser;
+let currentUserIndex = 0;
 
 // i just made a game board to test if it actually rendered, it works so far :)
 
-let colorArr = generateRandomColors();
-let combo = getCorrectOrder(colorArr);
-console.log(combo);
-let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(colorArr, combo));
+// let colorArr = generateRandomColors();
+// let combo = getCorrectOrder(colorArr);
+// console.log(combo);
+// let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(colorArr, combo));
 
 
 
 
 // i think this render board method should also happen in the driver code but it's here for now
-renderBoard();
+// renderBoard();
 
 
 
@@ -27,19 +30,26 @@ renderBoard();
     highestWinStreak:
     GameBoard: (it's an object)
   */
-function User(username, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0, gameBoard = new GameBoard())
+function User(username, gameBoard, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0)
 {
+  // the player's name
   this.username = username;
+  // how many total games this player has won
   this.totalGamesWon = totalGamesWon;
+  // current record of how games they've won in a row 
   this.winStreak = winStreak;
+  // highest winStreak they've ever had
   this.highestWinStreak = highestWinStreak;
+  // the game board for the current user's game state
   this.gameBoard = gameBoard;
 }
 
 // Prototype functions for user
 // TODO: create function to update properties of User object's stats
 User.prototype.updateStats = function() {
-
+  // update current user's properties once a game ends
+  // make sure the game board is cleared at the end of the game
+  // then make call to local storage function with the updated stats and cleared out game board
 }
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
@@ -65,7 +75,8 @@ GameBoard.prototype.addGuess = function(guessColorArr) {
   this.previousGuesses.push(guessColorArr);
 };
 
-function renderBoard() {
+// this function will display the play area to the user
+GameBoard.prototype.renderBoard = function() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
@@ -92,7 +103,7 @@ function renderBoard() {
   // create the color chooser options at the bottom of the page
   // colorBoard is the window into the DOM
   let colorBoard = document.querySelector('#colorBoard');
-  // this loop makes the six boxes that will show the possible colors
+  // this loop makes the color selection box elements for user input
   for(let i = 0; i < currentUser.gameBoard.colorArray.length; i++) {
     // create the box div
     let colorBox = document.createElement('div');
@@ -105,7 +116,13 @@ function renderBoard() {
     // add event listener to the color board so users can pick a color
     colorBoard.addEventListener('click', handleColorPick);
   }
-}
+};
+
+// function addPreviousGuesses() {
+//   for(let i = 0; i < previousGuesses.length; i++) {
+
+//   }
+// }
 
 // this function will get the guess from the game board
 GameBoard.prototype.getGuessArray = function() {
@@ -118,14 +135,13 @@ GameBoard.prototype.getGuessArray = function() {
     // this css selector is grabbing the row with guess count and the individual box using the index
     let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i + 1})`);
     // add the selected elements background color to the array
-    console.log(getHSLString(currentElement));
     guessArr.push(getHSLString(currentElement));
   }
   // return this array so it can be pushed onto the previous guess array
   return guessArr;
 };
 
-// takes an array from the previous guess and compares it to the correct color arr
+// compares the user's current round of guessing to the answer key
 GameBoard.prototype.checkGuess = function() {
   // create an empty array to hold the compare values
   // compare value key: 1 = correct, 2 = incorrect position, 3 = completely wrong
@@ -164,16 +180,19 @@ GameBoard.prototype.updateBoard = function (compareArr) {
     if(compareArr[i] === 1) {
       key.style.border = 'solid green 5px';
     } else if (compareArr[i] === 2) {
-      key.style.border = 'solid grey 5px';
+      key.style.border = 'solid light grey 5px';
     } else {
       key.style.border = 'solid red 5px';
     }
   }
 };
 
-// when we get local storage and users figured out, I think this would be a good place to
+// generate elements to display user's play statistics
 GameBoard.prototype.renderStatsDisplay = function() {
-
+    // get container
+    // get make element for each play stat in User
+    // give content
+    // append to DOM
 };
 
 
@@ -205,6 +224,7 @@ function handleColorPick(event) {
 
 
   // this stores the string of the color of what was clicked
+
   // let color = event.target.style.background; this doesn't work because it's rgb
   let color = getHSLString(event.target);
 
@@ -224,6 +244,10 @@ function handleColorPick(event) {
       // if they win, remove the event listener and tell them they win!
       document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
       alert('you win, this is a place holder for something cooler');
+      currentUser.updateStats(winner);
+    }
+    if (!winner && gameCounter === 30) {
+      currentUser.updateStats(winner);
     }
   }
 }
@@ -248,7 +272,7 @@ function handleCompleteGuess() {
 
   // use the compare array to update the board
   currentUser.gameBoard.updateBoard(compareArr);
-
+  updateLocalStorage();
   // return if they won so the handleColorPick functions knows if they won
   return winner;
 }
@@ -256,7 +280,6 @@ function handleCompleteGuess() {
 // call this function in the game board constructor when a new game is started
 // this function accepts the array of possible colors and picks 5 of them to be the winning combination and returns that combination as an array
 function getCorrectOrder(colorArray) {
-
 // initial index to store winning combo
   let winningCombo = [];
 
@@ -273,7 +296,7 @@ function getCorrectOrder(colorArray) {
       winningCombo.push(colorArray[randColor]);
     }
   }
-
+  // console.log(winningCombo);
   // return the array of 5 unique, random colors
   return winningCombo;
 }
@@ -370,41 +393,78 @@ function getRandomNumber(min, max)
 
 
 
-// i was thinking this could be called on page load
-function driver() {
-  // getLocalStorage to initialize global variables
-  // prompt user to enter name
-  // take that string and pass it to getUser to see if user exists or not
+getLocalStorage();
+createNewUser();
 
-  // conditional
 
-  // if user array in local storage is null
-  // call store dictionary word
-  // create a user array save it as the local variable
-  // call the create new user function and save the user object as the current user and push it to user array
-
-  // if user array exists, but user is a new user
-  // call the create new user function, save it as current user, and push it to user array
-
-  // if user exists already
-  // set the current user variable to that object from the array
-
-  // render the game board that is stored in the User object
+// called in event handler when the user submits their username
+// add it to the array
+// if the user array exist it will check if user exist and either find that user or create a new user
+function checkIfUserExists() {
+  let startGame = false;
+  if(allUserArray) {
+    let isFound = false;
+    for(let user in allUserArray) {
+      if(allUserArray[user].username === globalUserName) {
+        currentUserIndex = user;
+        makeUserForStorage(allUserArray[user]);
+        isFound = true;
+        break;
+        // console.log('execute user already exists');
+      }
+    }
+    if (!isFound) {
+      makeUserForStorage(null);
+    }
+  } else { // if the user array is null
+    // console.log('no array yet');
+    // create an allUserArray[]
+    allUserArray = [];
+    // create a new User() object with GameBoard()
+    makeUserForStorage(null);
+  }
+  // once we have the current user create we can render the user's game board
+  startGame = true;
+  if(startGame) {
+    // console.log('start game');
+    currentUser.gameBoard.renderBoard();
+  }
 }
 
+// if the user doesn't exist in the user array create one
+// create color arrays to pass to the game board constructor, use new game board object to make new user
+function makeUserForStorage(existingUser) {
+  // i passed in null if the user doesn't exist
+  if(existingUser) {
+    // take the object literal from the JSON file and turn it into the a User and Gameboard object
+    let existingGame = new GameBoard(existingUser.gameBoard.colorArray, existingUser.gameBoard.correctOrderArr, existingUser.gameBoard.previousGuesses, existingUser.gameBoard.gameCounter);
+    let existingUserNewObject = new User(globalUserName, existingGame);
+    currentUser = existingUserNewObject;
+    allUserArray[currentUserIndex] = existingUserNewObject;
+  } else if (!existingUser) {
+    let newColorArray = generateRandomColors();
+    let newCombo = getCorrectOrder(newColorArray);
+    let newGame = new GameBoard(newColorArray, newCombo);
+    currentUser = new User(globalUserName, newGame);
+    allUserArray.push(currentUser);
+  }
+  updateLocalStorage();
+}
 
 // traverse through userObjects array
 // if user's name exists in any object's name property, return that object
 // if doesn't exist it will return null
 function getUser() {
   let name = document.getElementById('name');
-  console.log(name.value);
-  return name.value;
+  // console.log(name.value);
+  globalUserName = name.value;
+  let userForm = document.querySelector('#userName');
+  userForm.innerHTML = '';
 }
 
 // this function will get variables out of local storage set initialize the user object array global variables
 function getLocalStorage() {
-  allUserArray = localStorage.get('storedUsers');
+  allUserArray = JSON.parse(localStorage.getItem('storedUsers'));
 }
 
 // in the drive conditional, call this when a new user must be created
@@ -419,11 +479,14 @@ function createNewUser() {
   player.name = 'name';
   let playerLabel = document.createElement('label');
   playerLabel.for='name';
-  playerLabel.innerHTML='Hello there. Please enter your name.'
+  playerLabel.innerHTML='Hello there. Please enter your name.';
   let nameButton = document.createElement('button');
   nameButton.type='button';
   nameButton.innerHTML='Submit';
-  nameButton.addEventListener('click', getUser);
+  nameButton.addEventListener('click', () => {
+    getUser();
+    checkIfUserExists();
+  });
   userName.appendChild(playerLabel);
   userName.appendChild(player);
   userName.appendChild(nameButton);
@@ -431,14 +494,14 @@ function createNewUser() {
 }
 
 
-createNewUser();
-
-
-let testColorArray = generateRandomColors();
-getCorrectOrder(testColorArray);
+// let testColorArray = generateRandomColors();
+// getCorrectOrder(testColorArray);
 
 
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
-function updateLocalStorage(userObj) {
-  localStorage.setItem('storedUsers', allUserArray);
+function updateLocalStorage() {
+  localStorage.clear();
+  let stringArray = JSON.stringify(allUserArray);
+  localStorage.setItem('storedUsers', stringArray);
 }
+
