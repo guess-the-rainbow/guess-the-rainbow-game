@@ -254,7 +254,7 @@ function handleColorPick(event) {
     // call the handle complete guess function to determine if they won or update the board accordingly
       let winner = handleCompleteGuess();
       // if they did win, I just have an alert in there for now but we can do some cooler stuff
-      if(currentUser.gameBoard.gameCounter === 30) {
+      if(currentUser.gameBoard.gameCounter === 30 || winner) {
         if(winner) {
           currentUser.updateStats;
         } else {
