@@ -175,11 +175,11 @@ GameBoard.prototype.checkGuess = function() {
 };
 
 // this function uses the compare array integers keys to give a the color a border color based on that key
-GameBoard.prototype.updateBoard = function (compareArr) {
+GameBoard.prototype.updateBoard = function (compareArr, counterStart) {
   for(let i = 0; i < compareArr.length; i++) {
     // use a CSS selector to grab the box that needs ta border
     // the counter updates every guess so I had to decrement it five to update the previous five
-    let key = document.querySelectorAll('.guessRow>*')[i + this.gameCounter - 5];
+    let key = document.querySelectorAll('.guessRow>*')[i + counterStart];
 
     // the keys are the same as from the check guess function, green border for good, grey for includes, and red for wrong
     if(compareArr[i] === 1) {
@@ -224,7 +224,6 @@ function getHSLString(e) {
 }
 
 function handleColorPick(event) {
-  console.log(event.target.className);
   if(event.target.className === 'colorBox') {
     // I made an array of all the individual boxes so it would be easy to select the one I need
     let boxArray = document.querySelectorAll('.guessRow>*');
@@ -279,7 +278,7 @@ function handleCompleteGuess() {
   }
 
   // use the compare array to update the board
-  currentUser.gameBoard.updateBoard(compareArr);
+  currentUser.gameBoard.updateBoard(compareArr, currentUser.gameBoard.currentGuess - 5);
   updateLocalStorage();
   // return if they won so the handleColorPick functions knows if they won
   return winner;
@@ -437,9 +436,10 @@ function checkIfUserExists() {
     console.log('start game');
     currentUser.gameBoard.renderBoard();
     addPreviousGuesses();
+    let startUpdateAt = 0;
     for(let guess of currentUser.gameBoard.previousGuesses) {
-      console.log(currentUser.gameBoard.gameCounter);
-      currentUser.gameBoard.updateBoard(currentUser.gameBoard.checkGuess(guess));
+      currentUser.gameBoard.updateBoard(currentUser.gameBoard.checkGuess(guess), startUpdateAt);
+      startUpdateAt += 5;
     }
   }
 }
