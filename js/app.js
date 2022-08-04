@@ -286,7 +286,7 @@ function getCorrectOrder(colorArray) {
       winningCombo.push(colorArray[randColor]);
     }
   }
-  console.log(winningCombo);
+  // console.log(winningCombo);
   // return the array of 5 unique, random colors
   return winningCombo;
 }
@@ -387,26 +387,27 @@ getLocalStorage();
 createNewUser();
 
 
-// called in event handler when the user submits their username 
+// called in event handler when the user submits their username
 // add it to the array
 // if the user array exist it will check if user exist and either find that user or create a new user
 function checkIfUserExists() {
   let startGame = false;
   if(allUserArray) {
+    let isFound = false;
     for(let user in allUserArray) {
-      console.log(allUserArray[user]);
       if(allUserArray[user].username === globalUserName) {
-        makeUserForStorage(allUserArray[user]);
         currentUserIndex = user;
-        console.log('execute user already exists');
-      } else {
-        currentUserIndex = allUserArray.length;
-        console.log('execute add new user to existing array');
-        makeUserForStorage(null);
+        makeUserForStorage(allUserArray[user]);
+        isFound = true;
+        break;
+        // console.log('execute user already exists');
       }
     }
+    if (!isFound) {
+      makeUserForStorage(null);
+    }
   } else { // if the user array is null
-    console.log('no array yet');
+    // console.log('no array yet');
     // create an allUserArray[]
     allUserArray = [];
     // create a new User() object with GameBoard()
@@ -415,7 +416,7 @@ function checkIfUserExists() {
   // once we have the current user create we can render the user's game board
   startGame = true;
   if(startGame) {
-    console.log('start game');
+    // console.log('start game');
     currentUser.gameBoard.renderBoard();
   }
 }
@@ -426,15 +427,17 @@ function makeUserForStorage(existingUser) {
   // i passed in null if the user doesn't exist
   if(existingUser) {
     // take the object literal from the JSON file and turn it into the a User and Gameboard object
-    globalUserName = existingUser.name;
     let existingGame = new GameBoard(existingUser.gameBoard.colorArray, existingUser.gameBoard.correctOrderArr, existingUser.gameBoard.previousGuesses, existingUser.gameBoard.gameCounter);
+    let existingUserNewObject = new User(globalUserName, existingGame);
+    currentUser = existingUserNewObject;
+    allUserArray[currentUserIndex] = existingUserNewObject;
+  } else if (!existingUser) {
+    let newColorArray = generateRandomColors();
+    let newCombo = getCorrectOrder(newColorArray);
+    let newGame = new GameBoard(newColorArray, newCombo);
+    currentUser = new User(globalUserName, newGame);
+    allUserArray.push(currentUser);
   }
-  let newColorArray = generateRandomColors();
-  let newCombo = getCorrectOrder(newColorArray);
-  let newGame = new GameBoard(newColorArray, newCombo);
-  console.log(newGame);
-  currentUser = new User(globalUserName, newGame);
-  allUserArray.push(currentUser);
   updateLocalStorage();
 }
 
@@ -443,7 +446,7 @@ function makeUserForStorage(existingUser) {
 // if doesn't exist it will return null
 function getUser() {
   let name = document.getElementById('name');
-  console.log(name.value);
+  // console.log(name.value);
   globalUserName = name.value;
   let userForm = document.querySelector('#userName');
   userForm.innerHTML = '';
@@ -487,7 +490,7 @@ function createNewUser() {
 
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
 function updateLocalStorage() {
-  allUserArray[currentUserIndex] = currentUser;
+  localStorage.clear();
   let stringArray = JSON.stringify(allUserArray);
   localStorage.setItem('storedUsers', stringArray);
 }
