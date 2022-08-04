@@ -205,6 +205,7 @@ function handleColorPick(event) {
 
 
   // this stores the string of the color of what was clicked
+
   // let color = event.target.style.background; this doesn't work because it's rgb
   let color = getHSLString(event.target);
 
