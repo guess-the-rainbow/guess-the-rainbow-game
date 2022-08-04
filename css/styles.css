@@ -30,7 +30,7 @@ button {
   color: transparent;
   border: none;
   font-family: 'Rock Salt', cursive;
-  font-size: large;
+  font-size: x-large;
   font-weight: bold;
   cursor: pointer;
 }
@@ -70,8 +70,12 @@ label {
 }
 
 #userName {
-  margin-top: 300px;
+  position: fixed;
+  margin: auto;
+  margin-top: 450px;
   width: 475px;
+  /* margin-top: 300px;
+  width: 475px; */
 }
 
 #colorBoard {
@@ -87,7 +91,7 @@ label {
 }
 
 .logo {
-  position: absolute;
+  position: fixed;
   left: 25px;
   top: 25px;
   width: 250px;
@@ -103,7 +107,7 @@ label {
 }
 
 .Sun-GIF {
-  position: absolute;
+  position: fixed;
   right: 25px;
   top: 25px;
 }
