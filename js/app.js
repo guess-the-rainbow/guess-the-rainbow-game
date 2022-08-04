@@ -3,19 +3,22 @@
 // GLOBAL VARIABLES
 // User Array from local storage, current user
 let allUserArray;
+let globalUserName;
+let currentUser;
+let currentUserIndex = 0;
 
 // i just made a game board to test if it actually rendered, it works so far :)
 
-let colorArr = generateRandomColors();
-let combo = getCorrectOrder(colorArr);
-console.log(combo);
-let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(colorArr, combo));
+// let colorArr = generateRandomColors();
+// let combo = getCorrectOrder(colorArr);
+// console.log(combo);
+// let currentUser = new User('Brooke', 1, 1, 1, new GameBoard(colorArr, combo));
 
 
 
 
 // i think this render board method should also happen in the driver code but it's here for now
-renderBoard();
+// renderBoard();
 
 
 
@@ -27,7 +30,7 @@ renderBoard();
     highestWinStreak:
     GameBoard: (it's an object)
   */
-function User(username, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0, gameBoard = new GameBoard())
+function User(username, gameBoard, totalGamesWon = 0, winStreak = 0, highestWinStreak = 0)
 {
   this.username = username;
   this.totalGamesWon = totalGamesWon;
@@ -65,7 +68,7 @@ GameBoard.prototype.addGuess = function(guessColorArr) {
   this.previousGuesses.push(guessColorArr);
 };
 
-function renderBoard() {
+GameBoard.prototype.renderBoard = function() {
   // guess div is the window into the dom
   let guessDiv = document.querySelector('#guessDiv');
 
@@ -105,7 +108,7 @@ function renderBoard() {
     // add event listener to the color board so users can pick a color
     colorBoard.addEventListener('click', handleColorPick);
   }
-}
+};
 
 // this function will get the guess from the game board
 GameBoard.prototype.getGuessArray = function() {
@@ -118,7 +121,6 @@ GameBoard.prototype.getGuessArray = function() {
     // this css selector is grabbing the row with guess count and the individual box using the index
     let currentElement = document.querySelector(`.guessRow:nth-of-type(${guessCount}) .oneColor:nth-child(${i + 1})`);
     // add the selected elements background color to the array
-    console.log(getHSLString(currentElement));
     guessArr.push(getHSLString(currentElement));
   }
   // return this array so it can be pushed onto the previous guess array
@@ -249,7 +251,7 @@ function handleCompleteGuess() {
 
   // use the compare array to update the board
   currentUser.gameBoard.updateBoard(compareArr);
-
+  updateLocalStorage();
   // return if they won so the handleColorPick functions knows if they won
   return winner;
 }
@@ -257,7 +259,6 @@ function handleCompleteGuess() {
 // call this function in the game board constructor when a new game is started
 // this function accepts the array of possible colors and picks 5 of them to be the winning combination and returns that combination as an array
 function getCorrectOrder(colorArray) {
-
 // initial index to store winning combo
   let winningCombo = [];
 
@@ -274,7 +275,7 @@ function getCorrectOrder(colorArray) {
       winningCombo.push(colorArray[randColor]);
     }
   }
-
+  console.log(winningCombo);
   // return the array of 5 unique, random colors
   return winningCombo;
 }
@@ -371,28 +372,60 @@ function getRandomNumber(min, max)
 
 
 
-// i was thinking this could be called on page load
-function driver() {
-  // getLocalStorage to initialize global variables
-  // prompt user to enter name
-  // take that string and pass it to getUser to see if user exists or not
+getLocalStorage();
+createNewUser();
 
-  // conditional
 
-  // if user array in local storage is null
-  // call store dictionary word
-  // create a user array save it as the local variable
-  // call the create new user function and save the user object as the current user and push it to user array
-
-  // if user array exists, but user is a new user
-  // call the create new user function, save it as current user, and push it to user array
-
-  // if user exists already
-  // set the current user variable to that object from the array
-
-  // render the game board that is stored in the User object
+// called in event handler when the user submits their username 
+// add it to the array
+// if the user array exist it will check if user exist and either find that user or create a new user
+function checkIfUserExists() {
+  let startGame = false;
+  if(allUserArray) {
+    for(let user in allUserArray) {
+      console.log(allUserArray[user]);
+      if(allUserArray[user].username === globalUserName) {
+        makeUserForStorage(allUserArray[user]);
+        currentUserIndex = user;
+        console.log('execute user already exists');
+      } else {
+        currentUserIndex = allUserArray.length;
+        console.log('execute add new user to existing array');
+        makeUserForStorage(null);
+      }
+    }
+  } else { // if the user array is null
+    console.log('no array yet');
+    // create an allUserArray[]
+    allUserArray = [];
+    // create a new User() object with GameBoard()
+    makeUserForStorage(null);
+  }
+  // once we have the current user create we can render the user's game board
+  startGame = true;
+  if(startGame) {
+    console.log('start game');
+    currentUser.gameBoard.renderBoard();
+  }
 }
 
+// if the user doesn't exist in the user array create one
+// create color arrays to pass to the game board constructor, use new game board object to make new user
+function makeUserForStorage(existingUser) {
+  // i passed in null if the user doesn't exist
+  if(existingUser) {
+    // take the object literal from the JSON file and turn it into the a User and Gameboard object
+    globalUserName = existingUser.name;
+    let existingGame = new GameBoard(existingUser.gameBoard.colorArray, existingUser.gameBoard.correctOrderArr, existingUser.gameBoard.previousGuesses, existingUser.gameBoard.gameCounter);
+  }
+  let newColorArray = generateRandomColors();
+  let newCombo = getCorrectOrder(newColorArray);
+  let newGame = new GameBoard(newColorArray, newCombo);
+  console.log(newGame);
+  currentUser = new User(globalUserName, newGame);
+  allUserArray.push(currentUser);
+  updateLocalStorage();
+}
 
 // traverse through userObjects array
 // if user's name exists in any object's name property, return that object
@@ -400,12 +433,14 @@ function driver() {
 function getUser() {
   let name = document.getElementById('name');
   console.log(name.value);
-  return name.value;
+  globalUserName = name.value;
+  let userForm = document.querySelector('#userName');
+  userForm.innerHTML = '';
 }
 
 // this function will get variables out of local storage set initialize the user object array global variables
 function getLocalStorage() {
-  allUserArray = localStorage.get('storedUsers');
+  allUserArray = JSON.parse(localStorage.getItem('storedUsers'));
 }
 
 // in the drive conditional, call this when a new user must be created
@@ -420,11 +455,14 @@ function createNewUser() {
   player.name = 'name';
   let playerLabel = document.createElement('label');
   playerLabel.for='name';
-  playerLabel.innerHTML='Hello there. Please enter your name.'
+  playerLabel.innerHTML='Hello there. Please enter your name.';
   let nameButton = document.createElement('button');
   nameButton.type='button';
   nameButton.innerHTML='Submit';
-  nameButton.addEventListener('click', getUser);
+  nameButton.addEventListener('click', () => {
+    getUser();
+    checkIfUserExists();
+  });
   userName.appendChild(playerLabel);
   userName.appendChild(player);
   userName.appendChild(nameButton);
@@ -432,14 +470,14 @@ function createNewUser() {
 }
 
 
-createNewUser();
-
-
-let testColorArray = generateRandomColors();
-getCorrectOrder(testColorArray);
+// let testColorArray = generateRandomColors();
+// getCorrectOrder(testColorArray);
 
 
 // this function is called multiple times throughout the application, anytime the User object is changed or updated, we need to update that object in the global, update the global user array, and then set the array in local storage to be the updated global array
-function updateLocalStorage(userObj) {
-  localStorage.setItem('storedUsers', allUserArray);
+function updateLocalStorage() {
+  allUserArray[currentUserIndex] = currentUser;
+  let stringArray = JSON.stringify(allUserArray);
+  localStorage.setItem('storedUsers', stringArray);
 }
+
