@@ -58,13 +58,13 @@ function GameBoard(colorArray, correctOrderArr, previousGuesses = [], gameCounte
   // ['hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)', 'hsl(x, x, x)'];
   // color array holds 6 possible random colors, correct answer holds the random word
   this.colorArray = colorArray;
-
+  console.log(this.colorArray);
   // previous guess holds an array of user guesses
   this.previousGuesses = previousGuesses;
 
   // correct order array is colors picked from the randomly generated array
   this.correctOrderArr = correctOrderArr;
-
+  console.log(this.correctOrderArr);
   // this will keep track of where the user is on the board
   this.gameCounter = gameCounter;
 }
@@ -116,13 +116,22 @@ GameBoard.prototype.renderBoard = function() {
     // add event listener to the color board so users can pick a color
     colorBoard.addEventListener('click', handleColorPick);
   }
+
+  if (currentUser.gameBoard.previousGuesses) {
+    addPreviousGuesses();
+  }
 };
 
-// function addPreviousGuesses() {
-//   for(let i = 0; i < previousGuesses.length; i++) {
-
-//   }
-// }
+function addPreviousGuesses() {
+  for(let i = 0; i < currentUser.gameBoard.previousGuesses.length; i++) {
+    for(let j = 0; j < 5; j++) {
+      let currentElement = document.querySelector(`.guessRow:nth-of-type(${i + 1}) .oneColor:nth-child(${j + 1})`);
+      console.log(currentElement);
+      console.log(currentUser.gameBoard.previousGuesses[i][j]);
+      currentElement.style.background = currentUser.gameBoard.previousGuesses[i][j];
+    }
+  }
+}
 
 // this function will get the guess from the game board
 GameBoard.prototype.getGuessArray = function() {
@@ -180,7 +189,7 @@ GameBoard.prototype.updateBoard = function (compareArr) {
     if(compareArr[i] === 1) {
       key.style.border = 'solid green 5px';
     } else if (compareArr[i] === 2) {
-      key.style.border = 'solid light grey 5px';
+      key.style.border = 'solid grey 5px';
     } else {
       key.style.border = 'solid red 5px';
     }
@@ -219,35 +228,37 @@ function getHSLString(e) {
 }
 
 function handleColorPick(event) {
-  // I made an array of all the individual boxes so it would be easy to select the one I need
-  let boxArray = document.querySelectorAll('.guessRow>*');
+  if(event.target.class === '.colorBox') {
+    // I made an array of all the individual boxes so it would be easy to select the one I need
+    let boxArray = document.querySelectorAll('.guessRow>*');
 
 
-  // this stores the string of the color of what was clicked
+    // this stores the string of the color of what was clicked
 
-  // let color = event.target.style.background; this doesn't work because it's rgb
-  let color = getHSLString(event.target);
+    // let color = event.target.style.background; this doesn't work because it's rgb
+    let color = getHSLString(event.target);
 
-  // this changes the background color box to the clicked color
-  // i selected the box by taking the gamecounter from the gameboard and using it as the index in the box array
-  boxArray[currentUser.gameBoard.gameCounter].style.background = color;
+    // this changes the background color box to the clicked color
+    // i selected the box by taking the gamecounter from the gameboard and using it as the index in the box array
+    boxArray[currentUser.gameBoard.gameCounter].style.background = color;
 
-  // increment game counter so it selects the next box next time
-  currentUser.gameBoard.gameCounter++;
+    // increment game counter so it selects the next box next time
+    currentUser.gameBoard.gameCounter++;
 
-  // if the game counter divided by 5 does not have a remainder, then the 5 boxes have been filled
-  if(currentUser.gameBoard.gameCounter % 5 === 0) {
+    // if the game counter divided by 5 does not have a remainder, then the 5 boxes have been filled
+    if(currentUser.gameBoard.gameCounter % 5 === 0) {
     // call the handle complete guess function to determine if they won or update the board accordingly
-    let winner = handleCompleteGuess();
-    // if they did win, I just have an alert in there for now but we can do some cooler stuff
-    if (winner) {
+      let winner = handleCompleteGuess();
+      // if they did win, I just have an alert in there for now but we can do some cooler stuff
+      if (winner) {
       // if they win, remove the event listener and tell them they win!
-      document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
-      alert('you win, this is a place holder for something cooler');
-      currentUser.updateStats(winner);
-    }
-    if (!winner && gameCounter === 30) {
-      currentUser.updateStats(winner);
+        document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
+        alert('you win, this is a place holder for something cooler');
+        currentUser.updateStats(winner);
+      }
+      if (!winner && currentUser.gameBoard.gameCounter === 30) {
+        currentUser.updateStats(winner);
+      }
     }
   }
 }
