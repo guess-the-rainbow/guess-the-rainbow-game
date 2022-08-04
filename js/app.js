@@ -203,7 +203,18 @@ GameBoard.prototype.renderStatsDisplay = function() {
 
 // this function 'zeroes' /ut the game board display for a new game this also could be called in the event handler when the game ends, clear the game board and display stats for the current user
 GameBoard.prototype.clear = function() {
+  let gameBoard = document.querySelector('#colorBoard');
+  gameBoard.innerHTML = '';
+  let guessBoard = document.querySelector('#guessDiv');
+  guessBoard.innerHTML = '';
 
+  let playAgainButton = document.createElement('button');
+  playAgainButton.addEventListener('click', () => {
+    let newColArr = generateRandomColors();
+    let newColCombo = getCorrectOrder(newColArr);
+    currentUser.gameBoard = new GameBoard(newColArr, newColCombo);
+    location.reload();
+  });
 };
 
 
