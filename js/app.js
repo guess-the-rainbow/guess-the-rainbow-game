@@ -376,7 +376,7 @@ getLocalStorage();
 createNewUser();
 
 
-// called in event handler when the user submits their username 
+// called in event handler when the user submits their username
 // add it to the array
 // if the user array exist it will check if user exist and either find that user or create a new user
 function checkIfUserExists() {
@@ -417,6 +417,7 @@ function makeUserForStorage(existingUser) {
     // take the object literal from the JSON file and turn it into the a User and Gameboard object
     globalUserName = existingUser.name;
     let existingGame = new GameBoard(existingUser.gameBoard.colorArray, existingUser.gameBoard.correctOrderArr, existingUser.gameBoard.previousGuesses, existingUser.gameBoard.gameCounter);
+    currentUser = new User(globalUserName, existingGame);
   }
   let newColorArray = generateRandomColors();
   let newCombo = getCorrectOrder(newColorArray);
