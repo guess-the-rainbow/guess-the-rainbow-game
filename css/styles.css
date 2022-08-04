@@ -35,6 +35,18 @@ body {
   width: 250px;
 }
 
+body p {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, yellow, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Rock Salt', cursive;
+  font-size: xx-large;
+  font-weight: bolder;
+  margin-left: 20px;
+}
+
 .oneColor, .colorBox{
   border: solid black 1px;
   background-color: white;
