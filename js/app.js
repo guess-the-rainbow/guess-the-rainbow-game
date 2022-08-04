@@ -177,8 +177,6 @@ GameBoard.prototype.updateBoard = function (compareArr, counterStart) {
   for(let i = 0; i < compareArr.length; i++) {
     // use a CSS selector to grab the box that needs ta border
     // the counter updates every guess so I had to decrement it five to update the previous five
-    console.log(counterStart);
-    console.log(counterStart + i + 1);
     let key = document.querySelectorAll('.guessRow>*')[i + counterStart];
 
     // the keys are the same as from the check guess function, green border for good, grey for includes, and red for wrong
@@ -209,12 +207,14 @@ GameBoard.prototype.clear = function() {
   guessBoard.innerHTML = '';
 
   let playAgainButton = document.createElement('button');
+  playAgainButton.innerHTML = 'Play Again';
   playAgainButton.addEventListener('click', () => {
     let newColArr = generateRandomColors();
     let newColCombo = getCorrectOrder(newColArr);
     currentUser.gameBoard = new GameBoard(newColArr, newColCombo);
     location.reload();
   });
+  gameBoard.appendChild(playAgainButton);
 };
 
 
@@ -261,10 +261,10 @@ function handleColorPick(event) {
       // if they win, remove the event listener and tell them they win!
         document.querySelector('#colorBoard').removeEventListener('click', handleColorPick);
         alert('you win, this is a place holder for something cooler');
-        currentUser.updateStats(winner);
+        currentUser.gameBoard.clear();
       }
       if (!winner && currentUser.gameBoard.gameCounter === 30) {
-        currentUser.updateStats(winner);
+        currentUser.gameBoard.clear();
       }
     }
   }
