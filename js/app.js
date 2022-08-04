@@ -375,29 +375,30 @@ getLocalStorage();
 createNewUser();
 
 
-// called in event handler when the user submits their username
- // it will create an array, create a user/board, and add it to the array
+// called in event handler when the user submits their username 
+// add it to the array
 // if the user array exist it will check if user exist and either find that user or create a new user
 function checkIfUserExists() {
   let startGame = false;
-  
   if(allUserArray) {
     for(let user in allUserArray) {
       console.log(allUserArray[user]);
       if(allUserArray[user].username === globalUserName) {
-        currentUser = allUserArray[user];
+        makeUserForStorage(allUserArray[user]);
         currentUserIndex = user;
         console.log('execute user already exists');
       } else {
         currentUserIndex = allUserArray.length;
         console.log('execute add new user to existing array');
-        makeUserForStorage();
+        makeUserForStorage(null);
       }
     }
-  } else {
+  } else { // if the user array is null
     console.log('no array yet');
+    // create an allUserArray[]
     allUserArray = [];
-    makeUserForStorage();
+    // create a new User() object with GameBoard()
+    makeUserForStorage(null);
   }
   // once we have the current user create we can render the user's game board
   startGame = true;
@@ -409,7 +410,13 @@ function checkIfUserExists() {
 
 // if the user doesn't exist in the user array create one
 // create color arrays to pass to the game board constructor, use new game board object to make new user
-function makeUserForStorage() {
+function makeUserForStorage(existingUser) {
+  // i passed in null if the user doesn't exist
+  if(existingUser) {
+    // take the object literal from the JSON file and turn it into the a User and Gameboard object
+    globalUserName = existingUser.name;
+    let existingGame = new GameBoard(existingUser.gameBoard.colorArray, existingUser.gameBoard.correctOrderArr, existingUser.gameBoard.previousGuesses, existingUser.gameBoard.gameCounter);
+  }
   let newColorArray = generateRandomColors();
   let newCombo = getCorrectOrder(newColorArray);
   let newGame = new GameBoard(newColorArray, newCombo);
