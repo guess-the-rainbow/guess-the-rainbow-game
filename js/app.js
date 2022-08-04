@@ -50,7 +50,7 @@ User.prototype.updateStats = function() {
   // update current user's properties once a game ends
   // make sure the game board is cleared at the end of the game
   // then make call to local storage function with the updated stats and cleared out game board
-}
+};
 
 // GAME BOARD CONSTRUCTOR and PROTOTYPES
 function GameBoard(colorArray, correctOrderArr, previousGuesses = [], gameCounter = 0) {
@@ -224,7 +224,8 @@ function getHSLString(e) {
 }
 
 function handleColorPick(event) {
-  if(event.target.class === '.colorBox') {
+  console.log(event.target.className);
+  if(event.target.className === 'colorBox') {
     // I made an array of all the individual boxes so it would be easy to select the one I need
     let boxArray = document.querySelectorAll('.guessRow>*');
 
@@ -433,8 +434,13 @@ function checkIfUserExists() {
   // once we have the current user create we can render the user's game board
   startGame = true;
   if(startGame) {
-    // console.log('start game');
+    console.log('start game');
     currentUser.gameBoard.renderBoard();
+    addPreviousGuesses();
+    for(let guess of currentUser.gameBoard.previousGuesses) {
+      console.log(currentUser.gameBoard.gameCounter);
+      currentUser.gameBoard.updateBoard(currentUser.gameBoard.checkGuess(guess));
+    }
   }
 }
 
@@ -447,8 +453,6 @@ function makeUserForStorage(existingUser) {
     let existingGame = new GameBoard(existingUser.gameBoard.colorArray, existingUser.gameBoard.correctOrderArr, existingUser.gameBoard.previousGuesses, existingUser.gameBoard.gameCounter);
     let existingUserNewObject = new User(globalUserName, existingGame);
     currentUser = existingUserNewObject;
-    addPreviousGuesses();
-    currentUser.gameBoard.updateBoard();
     allUserArray[currentUserIndex] = existingUserNewObject;
   } else if (!existingUser) {
     let newColorArray = generateRandomColors();
