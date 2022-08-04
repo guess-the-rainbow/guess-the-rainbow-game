@@ -116,10 +116,6 @@ GameBoard.prototype.renderBoard = function() {
     // add event listener to the color board so users can pick a color
     colorBoard.addEventListener('click', handleColorPick);
   }
-
-  if (currentUser.gameBoard.previousGuesses) {
-    addPreviousGuesses();
-  }
 };
 
 function addPreviousGuesses() {
@@ -451,6 +447,8 @@ function makeUserForStorage(existingUser) {
     let existingGame = new GameBoard(existingUser.gameBoard.colorArray, existingUser.gameBoard.correctOrderArr, existingUser.gameBoard.previousGuesses, existingUser.gameBoard.gameCounter);
     let existingUserNewObject = new User(globalUserName, existingGame);
     currentUser = existingUserNewObject;
+    addPreviousGuesses();
+    currentUser.gameBoard.updateBoard();
     allUserArray[currentUserIndex] = existingUserNewObject;
   } else if (!existingUser) {
     let newColorArray = generateRandomColors();
