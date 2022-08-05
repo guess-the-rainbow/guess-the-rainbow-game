@@ -200,14 +200,18 @@ GameBoard.prototype.renderStatsDisplay = function() {
 
 
 // this function 'zeroes' /ut the game board display for a new game this also could be called in the event handler when the game ends, clear the game board and display stats for the current user
-GameBoard.prototype.clear = function() {
+GameBoard.prototype.clear = function(winner) {
   let gameBoard = document.querySelector('#colorBoard');
   gameBoard.innerHTML = '';
-  let guessBoard = document.querySelector('#guessDiv');
-  guessBoard.innerHTML = '';
+
+  let strMessage = winner ? 'Congrats, You Won!' : 'So Close! Thanks for Playing';
+  let winnerPTag = document.createElement('p');
+  winnerPTag.innerHTML = strMessage;
+  gameBoard.style.flexDirection = 'column';
+  gameBoard.appendChild(winnerPTag);
 
   let playAgainButton = document.createElement('button');
-  playAgainButton.innerHTML = 'Play Again';
+  playAgainButton.innerHTML = 'Play Again?';
   playAgainButton.addEventListener('click', () => {
     location.reload();
   });
@@ -260,7 +264,7 @@ function handleColorPick(event) {
         } else {
           currentUser.updateStats;
         }
-        currentUser.gameBoard.clear();
+        currentUser.gameBoard.clear(winner);
         let newColArr = generateRandomColors();
         let newColCombo = getCorrectOrder(newColArr);
         currentUser.gameBoard = new GameBoard(newColArr, newColCombo);
