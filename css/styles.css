@@ -82,7 +82,9 @@ label {
   display: flex;
   flex-direction: row;
   margin-top: 25px;
+  
 }
+
 
 .guessRow{
   display: flex;
@@ -118,5 +120,6 @@ label {
   height: 90%;
   width: 100%;
   object-fit: cover;
-  margin-top: 35px;
+  margin-top: 50px;
 }
+
