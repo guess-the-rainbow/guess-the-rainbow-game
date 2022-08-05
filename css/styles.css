@@ -10,31 +10,6 @@ body {
   align-items: center;
 }
 
-#guessDiv {
-  display: flex;
-  flex-direction: column;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
-
-#colorBoard {
-  display: flex;
-  flex-direction: row;
-}
-
-.guessRow{
-  display: flex;
-  width: 300px;
-  height: 60px;
-}
-
-.logo {
-  position: absolute;
-  left: 25px;
-  top: 25px;
-  width: 250px;
-}
-
 body p {
   background-image: linear-gradient(to left, violet, indigo, green, blue, yellow, orange, red);
   -webkit-background-clip: text;
@@ -47,6 +22,83 @@ body p {
   margin-left: 20px;
 }
 
+button {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  border: none;
+  font-family: 'Rock Salt', cursive;
+  font-size: x-large;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+input {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  border: outset;
+  font-family: 'Rock Salt', cursive;
+  font-size: large;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+label {
+  background-image: linear-gradient(to left, violet, indigo, green, blue, yellow, orange, red);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Rock Salt', cursive;
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
+#guessDiv {
+  background-color: #B0D3F8;
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  padding: 10px;
+  padding-bottom: 0;
+}
+
+#userName {
+  position: fixed;
+  margin: auto;
+  margin-top: 450px;
+  width: 475px;
+  /* margin-top: 300px;
+  width: 475px; */
+}
+
+#colorBoard {
+  display: flex;
+  flex-direction: row;
+  margin-top: 25px;
+  
+}
+
+
+.guessRow{
+  display: flex;
+  width: 300px;
+  height: 60px;
+}
+
+.logo {
+  position: fixed;
+  left: 25px;
+  top: 25px;
+  width: 250px;
+}
+
 .oneColor, .colorBox{
   border: solid black 1px;
   background-color: white;
@@ -57,12 +109,17 @@ body p {
 }
 
 .Sun-GIF {
-  position: absolute;
+  position: fixed;
   right: 25px;
   top: 25px;
 }
 
 .Rainbow {
   position: absolute;
-  top: 550px;
+  top: 450px;
+  height: 90%;
+  width: 100%;
+  object-fit: cover;
+  margin-top: 50px;
 }
+
